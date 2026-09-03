@@ -75,14 +75,14 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Dietary Profile" />
+    <Head title="Profil Diet" />
     
     <div class="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
             <ChefHat class="mx-auto h-12 w-12 text-red-600" />
-            <h2 class="mt-6 text-3xl font-black text-gray-900">Any allergies or dietary restrictions?</h2>
+            <h2 class="mt-6 text-3xl font-black text-gray-900">Apakah Anda memiliki alergi atau pantangan makanan?</h2>
             <p class="mt-2 text-sm text-gray-600">
-                Select the ingredients you cannot eat. We will strictly hide menus containing these allergens.
+                Pilih bahan makanan yang tidak bisa Anda makan. Kami akan menyembunyikan menu yang mengandung alergen ini.
             </p>
         </div>
 
@@ -166,14 +166,14 @@ const submit = () => {
                             @click="form.allergen_ids = []" 
                             class="text-sm font-semibold text-gray-500 hover:text-gray-900"
                         >
-                            Clear all
+                            Hapus semua
                         </button>
                         <button 
                             type="submit" 
                             :disabled="form.processing"
                             class="inline-flex justify-center rounded-xl border border-transparent bg-blue-600 py-3 px-8 text-sm font-bold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
                         >
-                            {{ form.processing ? 'Saving...' : 'Save & Continue' }}
+                            {{ form.processing ? 'Menyimpan...' : 'Simpan & Lanjutkan' }}
                         </button>
                     </div>
                 </form>

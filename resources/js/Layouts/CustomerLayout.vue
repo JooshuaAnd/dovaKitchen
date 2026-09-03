@@ -13,9 +13,9 @@ const logout = () => {
 };
 
 const navItems = [
-    { name: 'Dashboard', routeName: 'catalog', icon: LayoutDashboard },
-    { name: 'Order History', routeName: 'history.index', icon: Clock },
-    { name: 'My Profile', routeName: 'profile.edit', icon: User },
+    { name: 'Katalog Menu', routeName: 'catalog', icon: LayoutDashboard },
+    { name: 'Riwayat Pesanan', routeName: 'history.index', icon: Clock },
+    { name: 'Profil Saya', routeName: 'profile.edit', icon: User },
 ];
 </script>
 
@@ -68,7 +68,7 @@ const navItems = [
                     class="flex w-full items-center px-3 py-2 text-sm font-medium text-gray-600 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors group"
                 >
                     <LogOut class="flex-shrink-0 -ml-1 mr-3 h-5 w-5 text-gray-400 group-hover:text-red-600" />
-                    Logout
+                    Keluar
                 </button>
             </div>
         </aside>
@@ -118,7 +118,7 @@ const navItems = [
                         class="flex w-full items-center px-3 py-3 text-base font-medium text-gray-600 rounded-xl hover:bg-red-50 hover:text-red-600"
                     >
                         <LogOut class="mr-4 h-6 w-6" />
-                        Logout
+                        Keluar
                     </button>
                 </div>
             </nav>

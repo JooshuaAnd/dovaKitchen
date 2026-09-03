@@ -65,12 +65,12 @@ const saveSchedule = () => {
 </script>
 
 <template>
-    <Head title="Weekly Management" />
+    <Head title="Manajemen Mingguan" />
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-                <h1 class="text-3xl font-black text-gray-900">Weekly Management</h1>
+                <h1 class="text-3xl font-black text-gray-900">Manajemen Mingguan</h1>
                 
                 <div class="flex items-center space-x-4 bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
                     <Link :href="getPrevWeekUrl()" class="p-1 text-gray-500 hover:text-blue-600 transition-colors">
@@ -78,7 +78,7 @@ const saveSchedule = () => {
                     </Link>
                     <div class="text-sm font-bold text-gray-700 flex items-center">
                         <CalendarIcon class="w-4 h-4 mr-2 text-gray-400" />
-                        Week of {{ dayjs(currentWeekStart).format('DD MMM YYYY') }}
+                        Minggu: {{ dayjs(currentWeekStart).format('DD MMM YYYY') }}
                     </div>
                     <Link :href="getNextWeekUrl()" class="p-1 text-gray-500 hover:text-blue-600 transition-colors">
                         <ChevronRight class="w-5 h-5" />
@@ -93,13 +93,13 @@ const saveSchedule = () => {
                             <h3 class="font-bold text-gray-900">{{ day.day_name }}</h3>
                             <p class="text-xs text-gray-500">{{ dayjs(day.date).format('DD MMM') }}</p>
                         </div>
-                        <button @click="openModal(day.date, day.day_name, day.menus)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md transition-colors" title="Manage Menus">
+                        <button @click="openModal(day.date, day.day_name, day.menus)" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md transition-colors" title="Kelola Menu">
                             <Plus class="w-4 h-4" />
                         </button>
                     </div>
                     <div class="p-4 flex-1">
                         <div v-if="day.menus.length === 0" class="h-full flex flex-col items-center justify-center text-center py-6">
-                            <p class="text-sm text-gray-400 italic">No menus assigned</p>
+                            <p class="text-sm text-gray-400 italic">Belum ada menu</p>
                         </div>
                         <div v-else class="space-y-3">
                             <div v-for="menu in day.menus" :key="menu.id" class="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg border border-gray-100">
@@ -115,13 +115,13 @@ const saveSchedule = () => {
             </div>
         </div>
 
-        <!-- Manage Menus Modal -->
+        <!-- Kelola Menu Modal -->
         <div v-if="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center">
             <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" @click="closeModal"></div>
             <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col m-4">
                 <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                     <div>
-                        <h2 class="text-xl font-bold text-gray-900">Manage Menus</h2>
+                        <h2 class="text-xl font-bold text-gray-900">Kelola Menu</h2>
                         <p class="text-sm text-gray-500">{{ activeDayName }}, {{ dayjs(activeDate).format('DD MMMM YYYY') }}</p>
                     </div>
                     <button @click="closeModal" class="p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-900 rounded-full transition-colors">
@@ -153,18 +153,18 @@ const saveSchedule = () => {
                             </div>
                         </div>
                         <div v-if="availableMenus.length === 0" class="col-span-full py-8 text-center text-gray-500">
-                            No active menus found in catalog.
+                            Tidak ada menu aktif yang ditemukan di katalog.
                         </div>
                     </div>
                 </div>
                 
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50 rounded-b-2xl">
                     <button @click="closeModal" type="button" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                        Cancel
+                        Batal
                     </button>
                     <button @click="saveSchedule" :disabled="form.processing" type="button" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 flex items-center">
                         <span v-if="form.processing" class="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                        Save Schedule
+                        Simpan Jadwal
                     </button>
                 </div>
             </div>

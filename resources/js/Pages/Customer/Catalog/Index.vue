@@ -20,11 +20,11 @@ const props = defineProps({
 
 // Calculate day states (monday-friday) based on menus
 const days = [
-    { id: 'monday', label: 'Monday', disabled: false },
-    { id: 'tuesday', label: 'Tuesday', disabled: false },
-    { id: 'wednesday', label: 'Wednesday', disabled: false },
-    { id: 'thursday', label: 'Thursday', disabled: false },
-    { id: 'friday', label: 'Friday', disabled: false },
+    { id: 'monday', label: 'Senin', disabled: false },
+    { id: 'tuesday', label: 'Selasa', disabled: false },
+    { id: 'wednesday', label: 'Rabu', disabled: false },
+    { id: 'thursday', label: 'Kamis', disabled: false },
+    { id: 'friday', label: 'Jumat', disabled: false },
 ];
 
 days.forEach(day => {
@@ -98,14 +98,14 @@ const claimBirthdayReward = () => {
 </script>
 
 <template>
-    <Head title="Menu Catalog" />
+    <Head title="Katalog Menu" />
     
     <CustomerLayout>
         <div class="min-h-screen bg-gray-50 pb-24">
         <!-- Top Nav -->
         <header class="bg-white shadow-sm sticky top-0 z-30">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <h1 class="text-xl font-bold text-gray-900">Weekly Menu</h1>
+                <h1 class="text-xl font-bold text-gray-900">Menu Mingguan</h1>
                 <button 
                     @click="isCartOpen = true"
                     class="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
@@ -185,8 +185,8 @@ const claimBirthdayReward = () => {
 
             <!-- Menu Grid -->
             <div v-if="activeDayMenus.length === 0" class="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
-                <p class="text-lg font-medium text-gray-900 mb-2">No menus available</p>
-                <p class="text-gray-500 text-center max-w-md">All menus for this day have been filtered out due to your dietary preferences, or haven't been published yet.</p>
+                <p class="text-lg font-medium text-gray-900 mb-2">Belum ada menu yang tersedia</p>
+                <p class="text-gray-500 text-center max-w-md">Semua menu untuk hari ini telah disaring berdasarkan preferensi diet Anda, atau belum diterbitkan.</p>
             </div>
             
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

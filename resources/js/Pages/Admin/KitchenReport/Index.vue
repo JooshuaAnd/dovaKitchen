@@ -1,77 +1,88 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { ChefHat, Printer } from 'lucide-vue-next';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import dayjs from 'dayjs';
+import 'dayjs/locale/id';
 
-defineProps({
-    report: Array
+dayjs.locale('id');
+
+const props = defineProps({
+    weekDates: Array,
+    currentWeekStart: String
 });
 
-const formatDate = (date) => {
-    return dayjs(date).format('dddd, DD MMM YYYY');
+const getNextWeekUrl = () => {
+    return route('admin.kitchen-report.index', { date: dayjs(props.currentWeekStart).add(7, 'day').format('YYYY-MM-DD') });
 };
 
-const printReport = () => {
-    window.print();
+const getPrevWeekUrl = () => {
+    return route('admin.kitchen-report.index', { date: dayjs(props.currentWeekStart).subtract(7, 'day').format('YYYY-MM-DD') });
 };
 </script>
 
 <template>
-    <Head title="Kitchen Report" />
+    <Head title="Laporan Pemesanan" />
 
     <AdminLayout>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:py-0 print:max-w-none print:px-0">
-            <div class="mb-8 flex items-center justify-between print:hidden">
-                <h1 class="text-3xl font-black text-gray-900">Kitchen Report</h1>
-                <button @click="printReport" class="inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-800 focus:bg-gray-800 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <Printer class="w-4 h-4 mr-2" /> Print Report
-                </button>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:py-0 print:max-w-none print:px-0">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 print:hidden">
+                <h1 class="text-3xl font-black text-gray-900">Laporan Pemesanan</h1>
+                
+                <div class="flex items-center space-x-4 bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">
+                    <Link :href="getPrevWeekUrl()" class="p-1 text-gray-500 hover:text-blue-600 transition-colors">
+                        <ChevronLeft class="w-5 h-5" />
+                    </Link>
+                    <div class="text-sm font-bold text-gray-700 flex items-center">
+                        <CalendarIcon class="w-4 h-4 mr-2 text-gray-400" />
+                        Minggu: {{ dayjs(currentWeekStart).format('DD MMM YYYY') }}
+                    </div>
+                    <Link :href="getNextWeekUrl()" class="p-1 text-gray-500 hover:text-blue-600 transition-colors">
+                        <ChevronRight class="w-5 h-5" />
+                    </Link>
+                </div>
             </div>
 
             <!-- Print Header -->
-            <div class="hidden print:flex items-center space-x-3 mb-6 border-b border-black pb-4">
-                <ChefHat class="w-8 h-8" />
-                <div>
-                    <h1 class="text-2xl font-black">Dova Kitchen - Daily Cook Report</h1>
-                    <p class="text-sm">Printed on {{ dayjs().format('DD MMM YYYY, HH:mm') }}</p>
+            <div class="hidden print:block mb-8 text-center border-b border-gray-900 pb-6">
+                <h2 class="text-2xl font-black text-gray-900 mb-1">Dova Kitchen - Laporan Pemesanan</h2>
+                <p class="text-gray-600 font-medium">Periode: {{ dayjs(currentWeekStart).format('DD MMMM YYYY') }} - {{ dayjs(currentWeekStart).add(4, 'day').format('DD MMMM YYYY') }}</p>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 print:grid-cols-5 print:gap-4">
+                <div v-for="day in weekDates" :key="day.date" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col print:border-gray-300 print:shadow-none">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 text-center print:bg-white print:border-b-2 print:border-gray-900">
+                        <h3 class="font-black text-gray-900 capitalize">{{ dayjs(day.date).format('dddd') }}</h3>
+                        <p class="text-xs font-bold text-gray-500">{{ dayjs(day.date).format('DD MMM') }}</p>
+                    </div>
+                    
+                    <div class="p-4 flex-1">
+                        <div v-if="day.menus.length === 0" class="h-full flex flex-col items-center justify-center text-center py-6 print:py-2">
+                            <p class="text-sm text-gray-400 italic">Libur / Tidak ada menu</p>
+                        </div>
+                        <div v-else class="space-y-4">
+                            <div v-for="menu in day.menus" :key="menu.id" class="flex flex-col space-y-3 p-3 bg-gray-50 rounded-lg border border-gray-100 print:bg-white print:border-gray-200 print:p-2">
+                                <div class="flex items-start space-x-3">
+                                    <img v-if="menu.photo_path" :src="menu.photo_path" class="w-12 h-12 rounded-md object-cover print:hidden" />
+                                    <div class="flex-1">
+                                        <p class="text-sm font-bold text-gray-900 leading-tight">{{ menu.name }}</p>
+                                    </div>
+                                </div>
+                                <div class="bg-blue-50 text-blue-800 border border-blue-100 rounded-md py-2 px-3 text-center print:bg-gray-100 print:text-gray-900 print:border-gray-300">
+                                    <p class="text-xs font-semibold uppercase tracking-wider mb-0.5">Total Dipesan</p>
+                                    <p class="text-xl font-black">{{ menu.total_portions }} <span class="text-sm font-bold">porsi</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden print:shadow-none print:border-black print:rounded-none">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 print:divide-black">
-                        <thead class="bg-gray-50 print:bg-white">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider print:text-black print:border-b print:border-black">Service Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider print:text-black print:border-b print:border-black">Menu Name</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider print:text-black print:border-b print:border-black">Total Portions to Cook</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 print:divide-gray-400">
-                            <tr v-for="(item, index) in report" :key="index" class="hover:bg-gray-50 print:hover:bg-transparent">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 print:text-black">
-                                    {{ formatDate(item.service_date) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 print:text-black font-bold">
-                                    {{ item.menu_name }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center text-xl font-black text-blue-600 print:text-black">
-                                    {{ item.total_portions }}
-                                </td>
-                            </tr>
-                            <tr v-if="report.length === 0">
-                                <td colspan="3" class="px-6 py-8 text-center text-gray-500 print:text-black">
-                                    No paid orders found.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="hidden print:block mt-8 text-sm italic">
-                * Note: This report only includes portions from orders that have been successfully verified (Paid).
+            <!-- Print Footer -->
+            <div class="hidden print:block mt-12 text-sm text-gray-500 text-center">
+                Dicetak pada: {{ dayjs().format('DD MMMM YYYY HH:mm') }}
             </div>
         </div>
     </AdminLayout>

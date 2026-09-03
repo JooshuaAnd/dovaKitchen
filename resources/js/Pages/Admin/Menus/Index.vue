@@ -11,7 +11,7 @@ defineProps({
 const form = useForm({});
 
 const deleteMenu = (id) => {
-    if (confirm('Are you sure you want to delete this menu?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus menu ini?')) {
         form.delete(route('admin.menus.destroy', id), {
             preserveScroll: true
         });
@@ -28,14 +28,14 @@ const formatPrice = (price) => {
 </script>
 
 <template>
-    <Head title="Manage Menus" />
+    <Head title="Manajemen Menu" />
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-black text-gray-900">Manage Menus</h1>
+                <h1 class="text-3xl font-black text-gray-900">Manajemen Menu</h1>
                 <Link :href="route('admin.menus.create')" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <Plus class="w-4 h-4 mr-2" /> Add Menu
+                    <Plus class="w-4 h-4 mr-2" /> Tambah Menu
                 </Link>
             </div>
 
@@ -44,11 +44,11 @@ const formatPrice = (price) => {
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Menu Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Menu</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Allergens</th>
-                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alergen</th>
+                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Aksi</span></th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -68,7 +68,7 @@ const formatPrice = (price) => {
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span :class="[menu.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800', 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full']">
-                                        {{ menu.is_active ? 'Active' : 'Inactive' }}
+                                        {{ menu.is_active ? 'Aktif' : 'Tidak Aktif' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -76,7 +76,7 @@ const formatPrice = (price) => {
                                         <span v-for="a in menu.allergens" :key="a.id" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
                                             {{ a.name }}
                                         </span>
-                                        <span v-if="menu.allergens.length === 0" class="text-gray-400 italic">None</span>
+                                        <span v-if="menu.allergens.length === 0" class="text-gray-400 italic">Tidak ada</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -84,7 +84,7 @@ const formatPrice = (price) => {
                                         <Link :href="route('admin.menus.edit', menu.id)" class="text-blue-600 hover:text-blue-900" title="Edit">
                                             <Edit2 class="w-5 h-5" />
                                         </Link>
-                                        <button @click="deleteMenu(menu.id)" class="text-red-600 hover:text-red-900" title="Delete">
+                                        <button @click="deleteMenu(menu.id)" class="text-red-600 hover:text-red-900" title="Hapus">
                                             <Trash2 class="w-5 h-5" />
                                         </button>
                                     </div>
@@ -92,7 +92,7 @@ const formatPrice = (price) => {
                             </tr>
                             <tr v-if="menus.length === 0">
                                 <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-                                    No menus found. Click "Add Menu" to create one.
+                                    Belum ada menu. Klik "Tambah Menu" untuk membuat menu baru.
                                 </td>
                             </tr>
                         </tbody>

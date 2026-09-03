@@ -61,8 +61,8 @@ const scrollTo = (id) => {
 
                 <!-- Desktop Nav -->
                 <nav class="hidden md:flex items-center space-x-8">
-                    <button @click="scrollTo('home')" class="text-gray-600 hover:text-red-600 font-semibold transition-colors">Home</button>
-                    <button @click="scrollTo('profile')" class="text-gray-600 hover:text-red-600 font-semibold transition-colors">Profile</button>
+                    <button @click="scrollTo('home')" class="text-gray-600 hover:text-red-600 font-semibold transition-colors">Beranda</button>
+                    <button @click="scrollTo('profile')" class="text-gray-600 hover:text-red-600 font-semibold transition-colors">Profil</button>
                     <button @click="scrollTo('menu')" class="text-gray-600 hover:text-red-600 font-semibold transition-colors">Menu Mingguan</button>
                 </nav>
 
@@ -252,13 +252,13 @@ const scrollTo = (id) => {
                 <div class="text-center">
                     <p class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-2">Tautan Cepat</p>
                     <div class="flex flex-col space-y-2">
-                        <button @click="scrollTo('home')" class="text-gray-400 hover:text-white transition-colors text-sm">Home</button>
-                        <button @click="scrollTo('profile')" class="text-gray-400 hover:text-white transition-colors text-sm">Profile</button>
+                        <button @click="scrollTo('home')" class="text-gray-400 hover:text-white transition-colors text-sm">Beranda</button>
+                        <button @click="scrollTo('profile')" class="text-gray-400 hover:text-white transition-colors text-sm">Profil</button>
                         <button @click="scrollTo('menu')" class="text-gray-400 hover:text-white transition-colors text-sm">Menu Mingguan</button>
                     </div>
                 </div>
                 <div class="text-center md:text-right">
-                    <p class="text-gray-500 text-sm">&copy; {{ new Date().getFullYear() }} Dova Kitchen. All rights reserved.</p>
+                    <p class="text-gray-500 text-sm">&copy; {{ new Date().getFullYear() }} Dova Kitchen. Hak Cipta Dilindungi.</p>
                 </div>
             </div>
         </footer>

@@ -4,6 +4,8 @@ import { Head, Link, useForm, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Users, Trash2, Eye, User, Phone, Mail, Calendar, AlertTriangle, X, CheckCircle2, Heart, ShoppingCart } from 'lucide-vue-next';
 import dayjs from 'dayjs';
+import UserDetailModal from './Partials/UserDetailModal.vue';
+import WhatsAppModal from './Partials/WhatsAppModal.vue';
 
 const props = defineProps({
     users: {
@@ -20,6 +22,11 @@ const formatDateTime = (date) => {
     return date ? dayjs(date).format('DD MMM YYYY HH:mm') : '-';
 };
 
+const isInactive = (date) => {
+    if (!date) return false;
+    return dayjs().diff(dayjs(date), 'day') >= 7;
+};
+
 // Modal state
 const isModalOpen = ref(false);
 const selectedUser = ref(null);
@@ -34,6 +41,15 @@ const closeModal = () => {
     setTimeout(() => {
         selectedUser.value = null;
     }, 300);
+};
+
+// WhatsApp Modal state
+const isWaModalOpen = ref(false);
+const waSelectedUser = ref(null);
+
+const openWaModal = (user) => {
+    waSelectedUser.value = user;
+    isWaModalOpen.value = true;
 };
 
 // Delete user
@@ -54,7 +70,7 @@ const confirmDelete = (user) => {
 </script>
 
 <template>
-    <Head title="User Management" />
+    <Head title="Manajemen Pengguna" />
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -63,7 +79,7 @@ const confirmDelete = (user) => {
                 <div>
                     <h1 class="text-3xl font-black text-gray-900 tracking-tight flex items-center">
                         <Users class="w-8 h-8 mr-3 text-red-600" />
-                        User Management
+                        Manajemen Akun
                     </h1>
                     <p class="mt-2 text-sm text-gray-500 font-medium">Kelola data pelanggan (Kustomer) yang terdaftar di Dova Kitchen.</p>
                 </div>
@@ -88,7 +104,8 @@ const confirmDelete = (user) => {
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kustomer</th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak</th>
                                 <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Total Pesanan</th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tgl Terdaftar</th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pesanan Terakhir</th>
+                                <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">WhatsApp</th>
                                 <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
@@ -125,8 +142,21 @@ const confirmDelete = (user) => {
                                         {{ user.orders_count }} Pesanan
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ formatDateTime(user.created_at) }}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    <span v-if="user.orders_max_created_at" 
+                                          :class="isInactive(user.orders_max_created_at) ? 'text-yellow-700 font-bold flex items-center bg-yellow-50 px-2.5 py-1 rounded-lg w-fit border border-yellow-200' : 'text-gray-500'">
+                                        <AlertTriangle v-if="isInactive(user.orders_max_created_at)" class="w-4 h-4 mr-1.5 text-yellow-600" />
+                                        {{ formatDateTime(user.orders_max_created_at) }}
+                                    </span>
+                                    <span v-else class="text-gray-400">-</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <button v-if="user.phone" @click="openWaModal(user)" class="inline-flex items-center justify-center p-2 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors" title="Kirim Pesan WhatsApp">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                                        </svg>
+                                    </button>
+                                    <span v-else class="text-xs text-gray-400">-</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button @click="openModal(user)" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition-colors mr-2" title="View Details">
@@ -138,7 +168,7 @@ const confirmDelete = (user) => {
                                 </td>
                             </tr>
                             <tr v-if="users.length === 0">
-                                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                     <Users class="w-12 h-12 text-gray-300 mx-auto mb-3" />
                                     <p class="text-base font-medium text-gray-900">Belum ada pengguna</p>
                                     <p class="text-sm mt-1">Sistem belum memiliki kustomer yang terdaftar.</p>
@@ -150,102 +180,17 @@ const confirmDelete = (user) => {
             </div>
         </div>
 
-        <!-- User Detail Modal -->
-        <div v-if="isModalOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                
-                <!-- Backdrop -->
-                <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity backdrop-blur-sm" @click="closeModal" aria-hidden="true"></div>
+        <UserDetailModal 
+            :show="isModalOpen" 
+            :user="selectedUser" 
+            @close="closeModal" 
+            @delete="confirmDelete" 
+        />
 
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-                <!-- Modal Panel -->
-                <div class="relative z-10 inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gray-100">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                <div class="flex justify-between items-center mb-6">
-                                    <h3 class="text-2xl font-black text-gray-900 flex items-center" id="modal-title">
-                                        Detail Kustomer
-                                    </h3>
-                                    <button @click="closeModal" class="text-gray-400 hover:text-gray-500 p-1 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors">
-                                        <X class="w-5 h-5" />
-                                    </button>
-                                </div>
-                                
-                                <div v-if="selectedUser" class="space-y-6">
-                                    <!-- Profile Header -->
-                                    <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                        <div class="h-16 w-16 bg-gradient-to-br from-red-500 to-rose-600 rounded-full flex items-center justify-center shadow-lg shadow-red-200 text-white font-black text-2xl">
-                                            {{ selectedUser.name.charAt(0).toUpperCase() }}
-                                        </div>
-                                        <div class="ml-5">
-                                            <h4 class="text-xl font-bold text-gray-900">{{ selectedUser.name }}</h4>
-                                            <p class="text-sm text-gray-500 font-medium">Terdaftar sejak {{ formatDate(selectedUser.created_at) }}</p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Personal Info Grid -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center mb-1">
-                                                <Mail class="w-3 h-3 mr-1.5" /> Email
-                                            </p>
-                                            <p class="text-sm font-medium text-gray-900">{{ selectedUser.email }}</p>
-                                        </div>
-                                        <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center mb-1">
-                                                <Phone class="w-3 h-3 mr-1.5" /> No. Handphone
-                                            </p>
-                                            <p class="text-sm font-medium text-gray-900">{{ selectedUser.phone || 'Belum diisi' }}</p>
-                                        </div>
-                                        <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center mb-1">
-                                                <Calendar class="w-3 h-3 mr-1.5" /> Tanggal Lahir
-                                            </p>
-                                            <p class="text-sm font-medium text-gray-900">{{ formatDate(selectedUser.date_of_birth) }}</p>
-                                        </div>
-                                        <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center mb-1">
-                                                <ShoppingCart class="w-3 h-3 mr-1.5" /> Total Pesanan
-                                            </p>
-                                            <p class="text-sm font-medium text-gray-900">{{ selectedUser.orders_count }} Transaksi</p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Dietary Profile -->
-                                    <div class="pt-2">
-                                        <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-3 flex items-center">
-                                            <Heart class="w-4 h-4 mr-2 text-red-500" /> Profil Pantangan (Alergi)
-                                        </h4>
-                                        <div class="bg-white p-5 rounded-xl border border-red-100 shadow-sm relative overflow-hidden">
-                                            <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
-                                            
-                                            <div v-if="selectedUser.allergens.length > 0" class="relative z-10 flex flex-wrap gap-2">
-                                                <span v-for="a in selectedUser.allergens" :key="a.id" class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-red-100 text-red-700 border border-red-200">
-                                                    {{ a.name }}
-                                                </span>
-                                            </div>
-                                            <div v-else class="relative z-10 flex items-center text-sm font-medium text-green-600 bg-green-50 px-4 py-3 rounded-lg border border-green-100">
-                                                <CheckCircle2 class="w-5 h-5 mr-2" />
-                                                Kustomer ini tidak memiliki pantangan alergi apapun.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-4 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-100">
-                        <button type="button" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-gray-900 text-base font-bold text-white hover:bg-gray-800 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors" @click="closeModal">
-                            Tutup
-                        </button>
-                        <button type="button" class="mt-3 w-full inline-flex justify-center rounded-xl border border-red-200 shadow-sm px-4 py-2 bg-white text-base font-bold text-red-700 hover:bg-red-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors" @click="confirmDelete(selectedUser)">
-                            Hapus Akun
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <WhatsAppModal 
+            :show="isWaModalOpen" 
+            :user="waSelectedUser" 
+            @close="isWaModalOpen = false" 
+        />
     </AdminLayout>
 </template>

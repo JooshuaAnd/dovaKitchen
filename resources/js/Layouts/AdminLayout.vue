@@ -7,11 +7,12 @@ const isMobileMenuOpen = ref(false);
 const page = usePage();
 
 const navItems = [
-    { name: 'Menu Management', routeName: 'admin.menus.index', icon: Utensils },
-    { name: 'Weekly Management', routeName: 'admin.weekly-management.index', icon: Calendar },
-    { name: 'Order Verification', routeName: 'admin.orders.index', icon: ReceiptText },
-    { name: 'User Management', routeName: 'admin.users.index', icon: Users },
-    { name: 'Kitchen Report', routeName: 'admin.kitchen-report.index', icon: ChefHat },
+    { name: 'Manajemen Menu', routeName: 'admin.menus.index', icon: Utensils },
+    { name: 'Manajemen Mingguan', routeName: 'admin.weekly-management.index', icon: Calendar },
+        { name: 'Laporan Pemesanan', routeName: 'admin.kitchen-report.index', icon: ChefHat },
+    { name: 'Verifikasi Pesanan', routeName: 'admin.orders.index', icon: ReceiptText },
+    { name: 'Manajemen Pengguna', routeName: 'admin.users.index', icon: Users },
+
 ];
 </script>
 
@@ -56,7 +57,7 @@ const navItems = [
                     class="flex w-full items-center justify-center px-3 py-2 text-sm font-medium text-gray-400 rounded-xl hover:bg-gray-800 hover:text-white transition-colors group border border-gray-700"
                 >
                     <LogOut class="mr-2 h-4 w-4" />
-                    Exit to App
+                    Keluar ke Aplikasi
                 </Link>
             </div>
         </aside>
@@ -106,7 +107,7 @@ const navItems = [
                         class="flex w-full items-center justify-center px-3 py-3 text-base font-medium text-gray-400 rounded-xl hover:bg-gray-800 hover:text-white transition-colors border border-gray-700"
                     >
                         <LogOut class="mr-3 h-5 w-5" />
-                        Exit to App
+                        Keluar ke Aplikasi
                     </Link>
                 </div>
             </nav>

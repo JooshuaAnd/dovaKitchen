@@ -26,7 +26,7 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
         <!-- Disabled Overlay -->
         <div v-if="!menu.is_orderable" class="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
             <span class="bg-gray-900/90 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm">
-                Ordering Closed
+                Pemesanan Ditutup
             </span>
         </div>
 
@@ -39,7 +39,7 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
-                No Photo
+                Tidak ada foto
             </div>
             
             <!-- Price Badge -->
@@ -67,7 +67,7 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
 
             <!-- Counter -->
             <div class="flex items-center justify-between mt-auto border-t border-gray-100 pt-4">
-                <span class="text-sm font-semibold text-gray-700">Portions</span>
+                <span class="text-sm font-semibold text-gray-700">Porsi</span>
                 <div class="flex items-center space-x-3 bg-gray-50/50 rounded-lg p-1 border border-gray-200">
                     <button 
                         @click="emit('decrement', menu)" 
