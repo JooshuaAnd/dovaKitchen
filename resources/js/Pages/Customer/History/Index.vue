@@ -1,7 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import CustomerLayout from '@/Layouts/CustomerLayout.vue';
-import { FileText, ArrowRight } from 'lucide-vue-next';
+import { FileText, ArrowRight, CheckCircle } from 'lucide-vue-next';
 import dayjs from 'dayjs';
 
 defineProps({
@@ -36,6 +36,12 @@ const getStatusBadge = (status) => {
 
     <CustomerLayout>
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <!-- Flash Notification -->
+            <div v-if="$page.props.flash?.success" class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-4 flex items-center shadow-xs">
+                <CheckCircle class="w-5 h-5 mr-3 text-emerald-600 flex-shrink-0" />
+                <span class="text-sm font-semibold">{{ $page.props.flash.success }}</span>
+            </div>
+
             <h1 class="text-3xl font-black text-gray-900 mb-8">Riwayat Pesanan</h1>
 
             <div v-if="orders.length === 0" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">

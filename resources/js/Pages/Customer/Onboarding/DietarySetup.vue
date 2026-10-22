@@ -58,6 +58,10 @@ const getSelectedText = (category, items) => {
     return `${selected.length} item dipilih`;
 };
 
+const getSelectedItems = (items) => {
+    return items.filter(item => form.allergen_ids.includes(item.id));
+};
+
 const toggleAllergen = (allergen) => {
     const index = form.allergen_ids.indexOf(allergen.id);
     if (index === -1) {
@@ -156,6 +160,25 @@ const submit = () => {
                                         </div>
                                     </div>
                                 </transition>
+                            </div>
+
+                            <!-- Selected items chips -->
+                            <div v-if="getSelectedItems(items).length > 0" class="flex flex-wrap gap-1.5 mt-2">
+                                <span 
+                                    v-for="sel in getSelectedItems(items)" 
+                                    :key="sel.id"
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200"
+                                >
+                                    {{ sel.name }}
+                                    <button 
+                                        type="button" 
+                                        @click="toggleAllergen(sel)" 
+                                        class="ml-1.5 text-red-400 hover:text-red-700 font-bold focus:outline-none"
+                                        title="Hapus"
+                                    >
+                                        &times;
+                                    </button>
+                                </span>
                             </div>
                         </div>
                     </div>

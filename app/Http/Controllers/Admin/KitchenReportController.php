@@ -28,7 +28,7 @@ class KitchenReportController extends Controller
             ->whereBetween('service_date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
             ->get();
 
-        // 3. MENGHITUNG TOTAL PORSI YANG DIPESAN OLEH PELANGGAN
+        // 3. MENGHITUNG TOTAL PORSI YANG DIPESAN OLEH PELANGGAN (RINGKASAN)
         // Melakukan query agregasi (pengelompokan dan penjumlahan) pada tabel order_items
         $report = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
             // Hanya ambil pesanan yang status pembayarannya sudah 'paid' (lunas)
@@ -45,7 +45,24 @@ class KitchenReportController extends Controller
             ->groupBy('order_items.service_date', 'order_items.menu_id')
             ->get();
 
-        // 4. MENYUSUN DATA UNTUK DITAMPILKAN DI TAMPILAN (VIEW)
+        // 4. MENGAMBIL RINCIAN DETAIL PESANAN PELANGGAN PER HARI
+        $orderItems = OrderItem::with([
+                'order' => function ($q) {
+                    $q->select('id', 'user_id', 'order_code', 'payment_status', 'created_at')
+                      ->with(['user' => function ($qu) {
+                          $qu->select('id', 'name', 'phone', 'email')
+                             ->with('allergens:id,name');
+                      }]);
+                },
+                'menu:id,name,photo_path,price'
+            ])
+            ->whereHas('order', function ($query) {
+                $query->where('payment_status', 'paid');
+            })
+            ->whereBetween('service_date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()])
+            ->get();
+
+        // 5. MENYUSUN DATA UNTUK DITAMPILKAN DI TAMPILAN (VIEW)
         $weekDates = [];
         // Looping sebanyak 5 kali untuk hari Senin (0) sampai Jumat (4)
         for ($i = 0; $i < 5; $i++) {
@@ -55,14 +72,20 @@ class KitchenReportController extends Controller
             
             // Memfilter menu yang dijadwalkan tepat pada tanggal ini
             $menusForDay = $dailyMenus->filter(function($dm) use ($dateString) {
-                return $dm->service_date->toDateString() === $dateString;
+                $dmDate = $dm->service_date instanceof Carbon 
+                    ? $dm->service_date->toDateString() 
+                    : substr((string)$dm->service_date, 0, 10);
+                return $dmDate === $dateString;
             })->map(function($dm) use ($report, $dateString) {
                 // Meng-copy data menu agar tidak merubah referensi aslinya
                 $menu = clone $dm->menu;
                 
                 // Mencari apakah ada data total pesanan untuk menu ini pada tanggal ini di hasil query agregasi ($report)
                 $orderAgg = $report->first(function($r) use ($menu, $dateString) {
-                    return $r->service_date === $dateString && $r->menu_id === $menu->id;
+                    $rDate = $r->service_date instanceof Carbon 
+                        ? $r->service_date->toDateString() 
+                        : substr((string)$r->service_date, 0, 10);
+                    return $rDate === $dateString && $r->menu_id === $menu->id;
                 });
                 
                 // Menyematkan nilai total_portions ke objek menu (jika tidak ada pesanan set jadi 0)
@@ -70,15 +93,65 @@ class KitchenReportController extends Controller
                 return $menu;
             })->values()->toArray(); // Re-index array
 
-            // Memasukkan data hari dan menu-menunya ke dalam array utama $weekDates
+            // Total porsi keseluruhan untuk hari ini
+            $totalDayPortions = array_sum(array_column($menusForDay, 'total_portions'));
+
+            // Memfilter pesanan yang dijadwalkan pada hari ini
+            $dayItems = $orderItems->filter(function ($item) use ($dateString) {
+                $itemDate = $item->service_date instanceof Carbon 
+                    ? $item->service_date->toDateString() 
+                    : substr((string)$item->service_date, 0, 10);
+                return $itemDate === $dateString;
+            });
+
+            // Mengelompokkan item pesanan per pesanan (order_id)
+            $customerOrders = $dayItems->groupBy('order_id')->map(function ($items) {
+                $first = $items->first();
+                $order = $first->order;
+                $user = $order ? $order->user : null;
+
+                $itemsList = $items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'menu_id' => $item->menu_id,
+                        'menu_name' => $item->menu ? $item->menu->name : 'Menu',
+                        'menu_photo' => $item->menu ? $item->menu->photo_path : null,
+                        'portion_quantity' => (int) $item->portion_quantity,
+                        'unit_price' => (float) $item->unit_price,
+                        'subtotal' => (float) $item->subtotal,
+                    ];
+                })->values()->toArray();
+
+                $totalCustomerPortions = $items->sum('portion_quantity');
+
+                return [
+                    'order_id' => $order ? $order->id : null,
+                    'order_code' => $order ? $order->order_code : '-',
+                    'created_at' => $order && $order->created_at ? $order->created_at->format('d M Y H:i') : null,
+                    'customer' => [
+                        'id' => $user ? $user->id : null,
+                        'name' => $user ? $user->name : 'Pelanggan',
+                        'phone' => $user ? $user->phone : null,
+                        'email' => $user ? $user->email : null,
+                        'allergens' => $user && $user->allergens ? $user->allergens->pluck('name')->toArray() : [],
+                    ],
+                    'items' => $itemsList,
+                    'total_portions' => (int) $totalCustomerPortions,
+                ];
+            })->values()->toArray();
+
+            // Memasukkan data hari, menu-menunya, dan rincian pemesan ke dalam array utama $weekDates
             $weekDates[] = [
                 'date' => $dateString,
                 'day_name' => $date->format('l'), // Mengambil nama hari, misal: "Monday"
                 'menus' => $menusForDay,
+                'total_portions' => $totalDayPortions,
+                'total_customers' => count($customerOrders),
+                'customer_orders' => $customerOrders,
             ];
         }
 
-        // 5. MENGIRIM DATA KE FRONTEND (VUE.JS) VIA INERTIA
+        // 6. MENGIRIM DATA KE FRONTEND (VUE.JS) VIA INERTIA
         return Inertia::render('Admin/KitchenReport/Index', [
             'weekDates' => $weekDates,
             'currentWeekStart' => $startOfWeek->toDateString(),

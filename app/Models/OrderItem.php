@@ -17,6 +17,7 @@ class OrderItem extends Model
     ];
 
     protected $casts = [
+        'service_date' => 'date',
         'unit_price' => 'decimal:2',
         'subtotal' => 'decimal:2',
         'portion_quantity' => 'integer',

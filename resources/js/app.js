@@ -33,6 +33,8 @@ const routes = {
     'admin.users.destroy': '/admin/users',
     'admin.orders.index': '/admin/orders',
     'admin.kitchen-report.index': '/admin/kitchen-report',
+    'admin.allergens.index': '/admin/allergens',
+    'admin.allergens.store': '/admin/allergens',
 };
 
 window.route = (name, params) => {

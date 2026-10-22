@@ -82,7 +82,7 @@ const scrollTo = (id) => {
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
             </div>
 
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-40 md:pt-48 md:pb-56">
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-40 md:pt-20 md:pb-56">
                 <div class="max-w-2xl">
                     <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md rounded-full px-4 py-2 mb-6 border border-white/30 text-white">
                         <MapPin class="w-4 h-4 text-red-400" />

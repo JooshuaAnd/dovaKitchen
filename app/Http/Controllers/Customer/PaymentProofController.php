@@ -37,7 +37,7 @@ class PaymentProofController extends Controller
             ]);
         }
 
-        // Mengembalikan pengguna (kustomer) ke halaman pesanan dengan membawa pesan sukses
-        return back()->with('success', 'Payment proof uploaded successfully.');
+        // Mengarahkan pengguna (kustomer) ke halaman riwayat pesanan (/history) dengan membawa pesan sukses
+        return redirect()->route('history.index')->with('success', 'Bukti pembayaran berhasil dikirim dan sedang menunggu verifikasi.');
     }
 }

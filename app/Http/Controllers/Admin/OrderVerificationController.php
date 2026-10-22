@@ -37,6 +37,22 @@ class OrderVerificationController extends Controller
             'payment_status' => $validated['status'],
         ]);
 
+        // Notifikasi ke WhatsApp Bot jika webhook aktif
+        try {
+            $order->loadMissing('user');
+            if ($order->user && $order->user->phone) {
+                \Illuminate\Support\Facades\Http::timeout(2)->post('http://127.0.0.1:3000/webhook/order-status', [
+                    'order_id' => $order->id,
+                    'order_code' => $order->order_code,
+                    'status' => $validated['status'],
+                    'phone' => $order->user->phone,
+                    'customer_name' => $order->user->name,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            // Abaikan jika server bot sedang tidak aktif agar tidak mengganggu transaksi admin
+        }
+
         // Mengembalikan pengguna (admin) ke halaman sebelumnya dengan membawa pesan sukses (session flash message)
         return back()->with('success', 'Order status updated to ' . $validated['status']);
     }

@@ -83,4 +83,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'is_admin'])->group(
 
     // Kitchen Report
     Route::get('/kitchen-report', [KitchenReportController::class, 'index'])->name('kitchen-report.index');
+
+    // Allergens / Bahan Baku API
+    Route::get('/allergens', [\App\Http\Controllers\Admin\AllergenController::class, 'index'])->name('allergens.index');
+    Route::post('/allergens', [\App\Http\Controllers\Admin\AllergenController::class, 'store'])->name('allergens.store');
 });

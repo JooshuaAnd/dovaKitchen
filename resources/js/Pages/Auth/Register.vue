@@ -19,8 +19,10 @@ const submit = () => {
     <Head title="Daftar" />
     <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <div class="flex justify-center text-red-600">
-                <ChefHat class="w-12 h-12" />
+            <div class="flex justify-center">
+                <Link :href="route('home')" title="Kembali ke Beranda" class="inline-flex text-red-600 hover:text-red-700 hover:scale-105 transition-all p-2 rounded-2xl hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <ChefHat class="w-12 h-12" />
+                </Link>
             </div>
             <h2 class="mt-4 text-center text-3xl font-black text-gray-900">Daftar Akun Dova</h2>
             <p class="mt-2 text-center text-sm text-gray-600">
