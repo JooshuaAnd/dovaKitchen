@@ -15,16 +15,6 @@ class CustomerAccessController extends Controller
         return Inertia::render('Customer/Access/Start');
     }
 
-    public function signedStart(Request $request, User $user)
-    {
-        abort_if($user->is_admin || !$user->phone, 404);
-
-        $request->session()->put('customer_access_target_user_id', $user->id);
-        $request->session()->forget('customer_access_phone');
-
-        return redirect()->route('customer-access.start');
-    }
-
     public function identify(Request $request)
     {
         $validated = $request->validate([
@@ -39,24 +29,10 @@ class CustomerAccessController extends Controller
             ]);
         }
 
-        $targetUserId = $request->session()->get('customer_access_target_user_id');
+        $user = User::where('phone', $phone)->where('is_admin', false)->first();
 
-        if ($targetUserId) {
-            $user = User::whereKey($targetUserId)->where('is_admin', false)->first();
-
-            if (!$user || User::normalizePhone($user->phone) !== $phone) {
-                return back()->withErrors([
-                    'phone' => 'Nomor WhatsApp tidak sesuai dengan link akses ini.',
-                ]);
-            }
-
+        if ($user) {
             return $this->loginCustomer($request, $user, 'catalog');
-        }
-
-        if (User::where('phone', $phone)->where('is_admin', false)->exists()) {
-            return back()->withErrors([
-                'phone' => 'Nomor ini sudah terdaftar. Silakan gunakan link khusus yang dikirim admin.',
-            ]);
         }
 
         $request->session()->put('customer_access_phone', $phone);
@@ -91,7 +67,7 @@ class CustomerAccessController extends Controller
             $request->session()->forget('customer_access_phone');
 
             return redirect()->route('customer-access.start')->withErrors([
-                'phone' => 'Nomor WhatsApp sudah terdaftar. Silakan gunakan link akses customer lama.',
+                'phone' => 'Nomor WhatsApp sudah terdaftar. Silakan ulangi dari portal umum.',
             ]);
         }
 
@@ -109,10 +85,7 @@ class CustomerAccessController extends Controller
     {
         Auth::login($user);
         $request->session()->regenerate();
-        $request->session()->forget([
-            'customer_access_target_user_id',
-            'customer_access_phone',
-        ]);
+        $request->session()->forget('customer_access_phone');
 
         return redirect()->route($route);
     }

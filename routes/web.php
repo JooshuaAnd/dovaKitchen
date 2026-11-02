@@ -16,7 +16,6 @@ use App\Http\Controllers\Admin\KitchenReportController;
 use App\Http\Controllers\Auth\AuthController;
 use Inertia\Inertia;
 use App\Models\Allergen;
-use Illuminate\Routing\Middleware\ValidateSignature;
 
 // Public Landing Page
 Route::get('/', LandingPageController::class)->name('home');
@@ -26,9 +25,6 @@ Route::get('/order/start', [CustomerAccessController::class, 'start'])->name('cu
 Route::get('/order/access/register', [CustomerAccessController::class, 'registerForm'])->name('customer-access.register.form');
 Route::post('/order/access/register', [CustomerAccessController::class, 'register'])->name('customer-access.register');
 Route::post('/order/access', [CustomerAccessController::class, 'identify'])->name('customer-access.identify');
-Route::get('/order/access/{user}', [CustomerAccessController::class, 'signedStart'])
-    ->middleware(ValidateSignature::relative())
-    ->name('customer-access.signed');
 
 // Admin auth route. Customer registration uses the WhatsApp access link above.
 Route::get('/login', function () { return Inertia::render('Auth/Login'); })->name('login');

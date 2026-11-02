@@ -16,14 +16,9 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 const waMessage = ref('');
 
-const getAccessUrl = (user) => {
-    if (!user?.customer_access_url) return `${window.location.origin}/order/start`;
-    return new URL(user.customer_access_url, window.location.origin).toString();
-};
-
 watch(() => props.user, (newUser) => {
     if (newUser) {
-        waMessage.value = `Halo ${newUser.name}, yuk pesan makanan sehat di Dova Kitchen.\n\nBuka link ini untuk mulai memesan:\n${getAccessUrl(newUser)}\n\nLink berlaku selama 7 hari.`;
+        waMessage.value = `Halo ${newUser.name} sudah lama tidak jumpa, yuk kunjungi website Dova Kitchen dan dapatkan voucher untuk makananmu.`;
     }
 }, { immediate: true });
 

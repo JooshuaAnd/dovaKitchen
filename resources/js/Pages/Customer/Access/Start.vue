@@ -20,7 +20,7 @@ const submit = () => {
                 <ChefHat class="w-12 h-12" />
             </Link>
             <h1 class="mt-5 text-3xl font-black text-gray-900">Mulai Pesan di Dova Kitchen</h1>
-            <p class="mt-2 text-sm text-gray-600">Masukkan nomor WhatsApp yang menerima link pemesanan dari admin.</p>
+            <p class="mt-2 text-sm text-gray-600">Masukkan nomor WhatsApp untuk melanjutkan pemesanan.</p>
         </div>
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
