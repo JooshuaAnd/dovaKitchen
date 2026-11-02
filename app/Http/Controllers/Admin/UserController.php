@@ -8,6 +8,7 @@ use App\Models\VoucherTemplate;
 use App\Services\RfmService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -41,6 +42,19 @@ class UserController extends Controller
 
         // Pendelegasian perhitungan RFM, scoring, segmentasi, dan agregasi KPI ke RfmService
         $analysisResult = $this->rfmService->analyzeUsers($users, $analysisDate);
+
+        $analysisResult['users'] = $analysisResult['users']->map(function (array $user) {
+            if (!empty($user['id']) && !empty($user['phone'])) {
+                $user['customer_access_url'] = URL::temporarySignedRoute(
+                    'customer-access.signed',
+                    now()->addDays(7),
+                    ['user' => $user['id']],
+                    false
+                );
+            }
+
+            return $user;
+        });
 
         // Mengirimkan sekumpulan data user tersebut ke halaman frontend (Vue.js) menggunakan Inertia
         return Inertia::render('Admin/Users/Index', [

@@ -68,8 +68,8 @@ const scrollTo = (id) => {
 
                 <!-- Actions -->
                 <div class="flex shrink-0 items-center space-x-2 sm:space-x-4">
-                    <Link :href="route('login')" class="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-semibold">Masuk</Link>
-                    <Link :href="route('register')" class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-bold hover:shadow-lg hover:shadow-red-200 transition-all transform hover:-translate-y-0.5"><span class="sm:hidden">Daftar</span><span class="hidden sm:inline">Daftar Sekarang</span></Link>
+                    <Link :href="route('login')" class="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-semibold">Masuk Admin</Link>
+                    <Link :href="route('customer-access.start')" class="bg-gradient-to-r from-red-600 to-red-500 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm sm:text-base font-bold hover:shadow-lg hover:shadow-red-200 transition-all transform hover:-translate-y-0.5"><span class="sm:hidden">Pesan</span><span class="hidden sm:inline">Mulai Memesan</span></Link>
                 </div>
             </div>
         </header>
@@ -177,7 +177,7 @@ const scrollTo = (id) => {
                 <div class="text-center mb-8 sm:mb-12">
                     <span class="text-red-600 font-bold tracking-wider uppercase text-sm">Hidangan Spesial</span>
                     <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-2 mb-4">Pilihan Menu Mingguan</h2>
-                    <p class="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">Daftar menu di bawah ini dapat Anda pesan melalui Dashboard setelah melakukan registrasi.</p>
+                    <p class="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">Pilih menu yang Anda suka, lalu mulai pemesanan melalui portal customer.</p>
                 </div>
 
                 <!-- Day Tabs -->
@@ -232,7 +232,7 @@ const scrollTo = (id) => {
                 </div>
 
                 <div class="mt-10 sm:mt-16 text-center">
-                    <Link :href="route('register')" class="inline-flex w-full sm:w-auto justify-center items-center bg-gray-900 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-black text-base sm:text-lg hover:bg-gray-800 transition-colors shadow-xl">
+                    <Link :href="route('customer-access.start')" class="inline-flex w-full sm:w-auto justify-center items-center bg-gray-900 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-black text-base sm:text-lg hover:bg-gray-800 transition-colors shadow-xl">
                         Pesan Menu Sekarang <ChevronRight class="w-5 h-5 ml-2" />
                     </Link>
                 </div>

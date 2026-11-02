@@ -13,7 +13,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Masuk" />
+    <Head title="Masuk Admin" />
     <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <div class="flex justify-center">
@@ -21,7 +21,7 @@ const submit = () => {
                     <ChefHat class="w-12 h-12" />
                 </Link>
             </div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Masuk ke akun Anda</h2>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Masuk Admin</h2>
         </div>
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -50,7 +50,7 @@ const submit = () => {
                 </form>
                 
                 <div class="mt-6 text-center">
-                    <Link :href="route('register')" class="text-sm font-medium text-red-600 hover:text-red-500">Belum punya akun? Daftar di sini</Link>
+                    <Link :href="route('customer-access.start')" class="text-sm font-medium text-red-600 hover:text-red-500">Pesan sebagai customer tanpa akun</Link>
                 </div>
             </div>
         </div>

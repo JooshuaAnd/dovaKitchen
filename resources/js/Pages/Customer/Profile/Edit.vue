@@ -8,15 +8,7 @@ const props = defineProps({
 
 const profileForm = useForm({
     name: props.user.name,
-    phone: props.user.phone || '',
     date_of_birth: props.user.date_of_birth ? props.user.date_of_birth.substring(0, 10) : '',
-    email: props.user.email,
-});
-
-const passwordForm = useForm({
-    current_password: '',
-    password: '',
-    password_confirmation: '',
 });
 
 const updateProfile = () => {
@@ -25,12 +17,6 @@ const updateProfile = () => {
     });
 };
 
-const updatePassword = () => {
-    passwordForm.put(route('profile.password'), {
-        preserveScroll: true,
-        onSuccess: () => passwordForm.reset(),
-    });
-};
 </script>
 
 <template>
@@ -66,8 +52,8 @@ const updatePassword = () => {
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700">No. Telepon / WhatsApp</label>
-                            <input v-model="profileForm.phone" type="tel" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-                            <div v-if="profileForm.errors.phone" class="text-red-500 text-xs font-semibold mt-1">{{ profileForm.errors.phone }}</div>
+                            <input :value="props.user.phone || '-'" type="tel" disabled class="mt-1 block w-full rounded-xl border-gray-200 bg-gray-50 text-gray-600 shadow-sm sm:text-sm">
+                            <p class="text-xs text-gray-500 mt-1">Nomor WhatsApp digunakan sebagai identitas akses customer.</p>
                         </div>
 
                         <div>
@@ -77,48 +63,11 @@ const updatePassword = () => {
                             <div v-if="profileForm.errors.date_of_birth" class="text-red-500 text-xs font-semibold mt-1">{{ profileForm.errors.date_of_birth }}</div>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700">Email</label>
-                            <input v-model="profileForm.email" type="email" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-                            <div v-if="profileForm.errors.email" class="text-red-500 text-xs font-semibold mt-1">{{ profileForm.errors.email }}</div>
-                        </div>
-
                         <div class="flex items-center space-x-4">
                             <button type="submit" :disabled="profileForm.processing" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-800 disabled:opacity-50">
                                 Simpan Perubahan
                             </button>
                             <span v-if="profileForm.recentlySuccessful" class="text-sm text-green-600 font-medium">Tersimpan.</span>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Password -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Ubah Kata Sandi</h2>
-                    
-                    <form @submit.prevent="updatePassword" class="space-y-6 max-w-xl">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Kata Sandi Saat Ini</label>
-                            <input v-model="passwordForm.current_password" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-                            <div v-if="passwordForm.errors.current_password" class="text-red-500 text-sm mt-1">{{ passwordForm.errors.current_password }}</div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Kata Sandi Baru</label>
-                            <input v-model="passwordForm.password" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-                            <div v-if="passwordForm.errors.password" class="text-red-500 text-sm mt-1">{{ passwordForm.errors.password }}</div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Konfirmasi Kata Sandi</label>
-                            <input v-model="passwordForm.password_confirmation" type="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-                        </div>
-
-                        <div class="flex items-center space-x-4">
-                            <button type="submit" :disabled="passwordForm.processing" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-800 disabled:opacity-50">
-                                Ubah Kata Sandi
-                            </button>
-                            <span v-if="passwordForm.recentlySuccessful" class="text-sm text-green-600 font-medium">Tersimpan.</span>
                         </div>
                     </form>
                 </div>

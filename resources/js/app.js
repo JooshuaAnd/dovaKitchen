@@ -10,8 +10,11 @@ const routes = {
     'login': '/login',
     'login.post': '/login',
     'register': '/register',
-    'register.post': '/register',
     'logout': '/logout',
+    'customer-access.start': '/order/start',
+    'customer-access.identify': '/order/access',
+    'customer-access.register.form': '/order/access/register',
+    'customer-access.register': '/order/access/register',
     'dietary-setup': '/dietary-setup',
     'dietary-profile.update': '/dietary-profile',
     'catalog': '/catalog',
@@ -21,7 +24,6 @@ const routes = {
     'orders.voucher.apply': '/orders',
     'profile.edit': '/profile',
     'profile.update': '/profile',
-    'profile.password': '/profile/password',
     
     // Admin Routes
     'admin.dashboard': '/admin/menus',

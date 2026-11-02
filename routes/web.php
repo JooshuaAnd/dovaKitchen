@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\PaymentProofController;
 use App\Http\Controllers\Customer\OrderHistoryController;
 use App\Http\Controllers\Customer\ProfileController;
+use App\Http\Controllers\Customer\CustomerAccessController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\WeeklyManagementController;
 use App\Http\Controllers\Admin\OrderVerificationController;
@@ -15,16 +16,24 @@ use App\Http\Controllers\Admin\KitchenReportController;
 use App\Http\Controllers\Auth\AuthController;
 use Inertia\Inertia;
 use App\Models\Allergen;
+use Illuminate\Routing\Middleware\ValidateSignature;
 
 // Public Landing Page
 Route::get('/', LandingPageController::class)->name('home');
 
-// Auth Routes
+// Customer access link
+Route::get('/order/start', [CustomerAccessController::class, 'start'])->name('customer-access.start');
+Route::get('/order/access/register', [CustomerAccessController::class, 'registerForm'])->name('customer-access.register.form');
+Route::post('/order/access/register', [CustomerAccessController::class, 'register'])->name('customer-access.register');
+Route::post('/order/access', [CustomerAccessController::class, 'identify'])->name('customer-access.identify');
+Route::get('/order/access/{user}', [CustomerAccessController::class, 'signedStart'])
+    ->middleware(ValidateSignature::relative())
+    ->name('customer-access.signed');
+
+// Admin auth route. Customer registration uses the WhatsApp access link above.
 Route::get('/login', function () { return Inertia::render('Auth/Login'); })->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
-Route::get('/register', function () { return Inertia::render('Auth/Register'); })->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::redirect('/register', '/order/start')->name('register');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -47,7 +56,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     Route::get('/orders/{order}', function (\Illuminate\Http\Request $request, \App\Models\Order $order) {
         abort_unless($order->user_id === $request->user()->id, 403);

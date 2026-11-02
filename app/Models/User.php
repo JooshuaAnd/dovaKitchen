@@ -11,6 +11,21 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public static function normalizePhone(?string $phone): ?string
+    {
+        $cleaned = preg_replace('/[^0-9]/', '', (string) $phone);
+
+        if ($cleaned === '') {
+            return null;
+        }
+
+        if (str_starts_with($cleaned, '0')) {
+            return '62' . substr($cleaned, 1);
+        }
+
+        return str_starts_with($cleaned, '8') ? '62' . $cleaned : $cleaned;
+    }
+
     /**
      * The attributes that are mass assignable.
      *
