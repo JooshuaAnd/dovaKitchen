@@ -25,6 +25,28 @@ class Order extends Model
         'total_amount' => 'decimal:2',
     ];
 
+    protected $appends = [
+        'payment_proof_url',
+    ];
+
+    protected function paymentProofUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: function () {
+                if (!$this->payment_proof_path) {
+                    return null;
+                }
+                if (str_starts_with($this->payment_proof_path, 'http://') || str_starts_with($this->payment_proof_path, 'https://')) {
+                    return $this->payment_proof_path;
+                }
+                if (str_starts_with($this->payment_proof_path, '/storage/')) {
+                    return $this->payment_proof_path;
+                }
+                return '/storage/' . ltrim($this->payment_proof_path, '/');
+            }
+        );
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

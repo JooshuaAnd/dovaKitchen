@@ -1,5 +1,5 @@
 <script setup>
-import { Minus, Plus } from 'lucide-vue-next';
+import { Minus, Plus, TriangleAlert } from 'lucide-vue-next';
 
 const props = defineProps({
     menu: {
@@ -22,16 +22,9 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
 </script>
 
 <template>
-    <div class="relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full group">
-        <!-- Disabled Overlay -->
-        <div v-if="!menu.is_orderable" class="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
-            <span class="bg-gray-900/90 text-white px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm">
-                Pemesanan Ditutup
-            </span>
-        </div>
-
+    <div :class="['relative bg-white rounded-xl shadow-sm overflow-hidden flex flex-col h-full group', menu.is_recommended ? 'border-gray-100' : 'border-amber-300']">
         <!-- Photo -->
-        <div class="aspect-w-16 aspect-h-9 w-full h-48 bg-gray-100 relative overflow-hidden">
+        <div class="aspect-w-16 aspect-h-9 w-full h-44 sm:h-48 bg-gray-100 relative overflow-hidden">
             <img 
                 v-if="menu.photo_path" 
                 :src="menu.photo_path" 
@@ -46,12 +39,25 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
             <div class="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-md text-sm font-bold text-gray-900 shadow-sm border border-white/20">
                 {{ formattedPrice }}
             </div>
+            <span v-if="!menu.is_orderable" class="absolute right-2 top-2 rounded-full bg-gray-900/90 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
+                Pemesanan ditutup
+            </span>
         </div>
 
         <div class="p-4 flex flex-col flex-grow">
             <h3 class="text-lg font-bold text-gray-900 mb-1 leading-tight">{{ menu.name }}</h3>
             
             <p class="text-sm text-gray-500 mb-3 line-clamp-2">{{ menu.description }}</p>
+
+            <div v-if="!menu.is_recommended" class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-900">
+                <div class="flex items-center gap-1.5 text-xs font-bold">
+                    <TriangleAlert class="h-4 w-4 shrink-0" />
+                    Tidak direkomendasikan untuk Anda
+                </div>
+                <p class="mt-1 text-xs leading-relaxed">
+                    Mengandung: {{ menu.dietary_warnings.join(', ') }}
+                </p>
+            </div>
 
             <!-- Allergens -->
             <div v-if="menu.allergens && menu.allergens.length > 0" class="flex flex-wrap gap-1 mb-4 mt-auto">
@@ -68,7 +74,7 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
             <!-- Counter -->
             <div class="flex items-center justify-between mt-auto border-t border-gray-100 pt-4">
                 <span class="text-sm font-semibold text-gray-700">Porsi</span>
-                <div class="flex items-center space-x-3 bg-gray-50/50 rounded-lg p-1 border border-gray-200">
+                <div v-if="menu.is_orderable" class="flex items-center space-x-3 bg-gray-50/50 rounded-lg p-1 border border-gray-200">
                     <button 
                         @click="emit('decrement', menu)" 
                         :disabled="quantity <= 0 || !menu.is_orderable"
@@ -85,6 +91,7 @@ const formattedPrice = new Intl.NumberFormat('id-ID', {
                         <Plus class="w-4 h-4" />
                     </button>
                 </div>
+                <span v-else class="rounded-md bg-gray-100 px-2.5 py-1.5 text-xs font-semibold text-gray-500">Tidak tersedia</span>
             </div>
         </div>
     </div>

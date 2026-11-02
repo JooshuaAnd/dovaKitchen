@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ShoppingCart, Gift, Sparkles, CheckCircle2, Heart } from 'lucide-vue-next';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import DayTabSelector from '@/Components/Customer/DayTabSelector.vue';
 import MenuCard from '@/Components/Customer/MenuCard.vue';
 import CartDrawer from '@/Components/Customer/CartDrawer.vue';
@@ -15,6 +17,14 @@ const props = defineProps({
     birthdayReward: {
         type: Object,
         default: () => ({})
+    },
+    userVouchers: {
+        type: Array,
+        default: () => []
+    },
+    rfmReward: {
+        type: Object,
+        default: () => null
     }
 });
 
@@ -28,9 +38,9 @@ const days = [
 ];
 
 days.forEach(day => {
-    const dayMenus = props.menus.filter(m => m.service_day === day.id);
+    const dayMenus = props.menus.filter(menu => menu.service_day === day.id);
     if (dayMenus.length > 0) {
-        day.disabled = !dayMenus.some(m => m.is_orderable);
+        day.disabled = !dayMenus.some(menu => menu.is_orderable);
     }
 });
 
@@ -46,7 +56,23 @@ const cart = ref({});
 
 const getQuantity = (menuId) => cart.value[menuId] || 0;
 
-const increment = (menu) => {
+const increment = async (menu) => {
+    if (!menu.is_orderable) return;
+
+    if (!menu.is_recommended && !cart.value[menu.daily_menu_id]) {
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: 'Menu tidak direkomendasikan',
+            text: `${menu.name} mengandung ${menu.dietary_warnings.join(', ')}, yang tercatat dalam profil dietary Anda. Tetap tambahkan ke keranjang?`,
+            showCancelButton: true,
+            confirmButtonText: 'Ya, tetap tambahkan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#d97706',
+        });
+
+        if (!result.isConfirmed) return;
+    }
+
     cart.value[menu.daily_menu_id] = (cart.value[menu.daily_menu_id] || 0) + 1;
 };
 
@@ -70,15 +96,19 @@ const cartItems = computed(() => {
 });
 
 const checkoutForm = useForm({
-    items: []
+    items: [],
+    voucher_code: '',
+    dietary_warnings_confirmed: false,
 });
 
-const proceedToCheckout = () => {
+const proceedToCheckout = (payload = {}) => {
     checkoutForm.items = cartItems.value.map(item => ({
         menu_id: item.menu.id,
         service_date: item.menu.service_date,
         portion_quantity: item.quantity
     }));
+    checkoutForm.voucher_code = payload?.voucher_code || '';
+    checkoutForm.dietary_warnings_confirmed = cartItems.value.some(item => !item.menu.is_recommended);
     
     checkoutForm.post(route('checkout.store'), {
         onSuccess: () => {
@@ -120,12 +150,12 @@ const claimBirthdayReward = () => {
                 </button>
             </div>
             
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 border-t border-gray-100 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 border-t border-gray-100 bg-white">
                 <DayTabSelector :days="days" v-model="selectedDay" />
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 sm:space-y-8">
             
             <!-- CRM Birthday Celebration & Reward Card -->
             <div v-if="birthdayReward?.is_birthday" 
@@ -186,10 +216,10 @@ const claimBirthdayReward = () => {
             <!-- Menu Grid -->
             <div v-if="activeDayMenus.length === 0" class="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
                 <p class="text-lg font-medium text-gray-900 mb-2">Belum ada menu yang tersedia</p>
-                <p class="text-gray-500 text-center max-w-md">Semua menu untuk hari ini telah disaring berdasarkan preferensi diet Anda, atau belum diterbitkan.</p>
+                <p class="text-gray-500 text-center max-w-md">Menu untuk hari yang dipilih belum diterbitkan.</p>
             </div>
             
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <MenuCard 
                     v-for="menu in activeDayMenus" 
                     :key="menu.daily_menu_id" 
@@ -205,6 +235,8 @@ const claimBirthdayReward = () => {
             :is-open="isCartOpen" 
             :items="cartItems" 
             :birthday-reward="birthdayReward"
+            :vouchers="userVouchers"
+            :rfm-reward="rfmReward"
             @close="isCartOpen = false"
             @checkout="proceedToCheckout"
         />

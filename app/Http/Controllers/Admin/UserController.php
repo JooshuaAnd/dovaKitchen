@@ -4,24 +4,49 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\VoucherTemplate;
+use App\Services\RfmService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    // 1. MENAMPILKAN DAFTAR SEMUA PENGGUNA (KUSTOMER)
+    protected RfmService $rfmService;
+
+    public function __construct(RfmService $rfmService)
+    {
+        $this->rfmService = $rfmService;
+    }
+
+    // 1. MENAMPILKAN DAFTAR SEMUA PENGGUNA (KUSTOMER) BESERTA ANALISIS RFM & PREFERENSI BAHAN BAKU
     public function index()
     {
-        // Mengambil seluruh data user dari database
-        $users = User::with('allergens') // Memuat relasi tabel 'allergens' agar kita tahu alergi yang dimiliki tiap user
-            ->withCount('orders') // Menghitung total pesanan yang pernah dibuat oleh masing-masing user (menghasilkan atribut 'orders_count')
-            ->withMax('orders', 'created_at') // Mencari tanggal pesanan terakhir yang dibuat oleh user (menghasilkan atribut 'orders_max_created_at')
-            ->orderBy('created_at', 'desc') // Mengurutkan daftar user berdasarkan tanggal pendaftaran dari yang paling baru
-            ->get(); // Mengeksekusi query dan mengambil hasilnya
+        // Mengambil seluruh user non-admin (kustomer) beserta relasi pantangan dan riwayat pesanannya
+        $users = User::where('is_admin', false)
+            ->with([
+                'allergens',
+                'vouchers' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                },
+                'orders' => function ($query) {
+                    $query->with(['orderItems.menu.allergens'])
+                          ->orderBy('created_at', 'desc');
+                }
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $analysisDate = Carbon::now();
+
+        // Pendelegasian perhitungan RFM, scoring, segmentasi, dan agregasi KPI ke RfmService
+        $analysisResult = $this->rfmService->analyzeUsers($users, $analysisDate);
 
         // Mengirimkan sekumpulan data user tersebut ke halaman frontend (Vue.js) menggunakan Inertia
         return Inertia::render('Admin/Users/Index', [
-            'users' => $users
+            'users' => $analysisResult['users'],
+            'summary' => $analysisResult['summary'],
+            'voucherTemplates' => VoucherTemplate::orderBy('title')->get(),
         ]);
     }
 

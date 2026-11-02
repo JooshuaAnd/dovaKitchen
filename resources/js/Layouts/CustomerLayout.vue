@@ -22,7 +22,7 @@ const navItems = [
 <template>
     <div class="min-h-screen bg-gray-50 flex">
         <!-- Sidebar for Desktop -->
-        <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 fixed inset-y-0 z-40">
+        <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-gray-100 fixed inset-y-0 z-40">
             <div class="flex items-center justify-center h-20 border-b border-gray-100 px-6">
                 <Link :href="route('catalog')" class="flex items-center space-x-2 text-red-600">
                     <ChefHat class="w-8 h-8" />
@@ -74,10 +74,10 @@ const navItems = [
         </aside>
 
         <!-- Mobile Header -->
-        <div class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 z-50 flex items-center justify-between px-4">
+        <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 z-50 flex items-center justify-between px-4">
             <Link :href="route('catalog')" class="flex items-center space-x-2 text-red-600">
                 <ChefHat class="w-6 h-6" />
-                <span class="text-xl font-black tracking-tight">Dova</span>
+                <span class="text-xl font-black tracking-tight">Dova Kitchen</span>
             </Link>
             <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-500 hover:text-gray-700 p-2">
                 <X v-if="isMobileMenuOpen" class="w-6 h-6" />
@@ -86,10 +86,10 @@ const navItems = [
         </div>
 
         <!-- Mobile Menu Overlay -->
-        <div v-if="isMobileMenuOpen" class="md:hidden fixed inset-0 z-40 bg-gray-900/50" @click="isMobileMenuOpen = false"></div>
+        <div v-if="isMobileMenuOpen" class="lg:hidden fixed inset-0 z-40 bg-gray-900/50" @click="isMobileMenuOpen = false"></div>
         <div 
             :class="[
-                'md:hidden fixed inset-y-0 left-0 w-64 bg-white z-50 transform transition-transform duration-300 ease-in-out',
+                'lg:hidden fixed inset-y-0 left-0 w-64 bg-white z-50 transform transition-transform duration-300 ease-in-out',
                 isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
             ]"
         >
@@ -125,7 +125,7 @@ const navItems = [
         </div>
 
         <!-- Main Content -->
-        <main class="flex-1 md:ml-64 pt-16 md:pt-0 min-h-screen">
+        <main class="flex-1 lg:ml-64 pt-16 lg:pt-0 min-h-screen">
             <slot />
         </main>
     </div>

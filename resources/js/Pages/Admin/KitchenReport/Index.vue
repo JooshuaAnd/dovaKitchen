@@ -13,14 +13,13 @@ import {
     Mail, 
     Search, 
     AlertTriangle, 
-    ExternalLink, 
     CheckCircle2, 
     ChefHat, 
-    X,
-    Filter,
-    Clock,
-    ShoppingBag,
-    Eye
+    X, 
+    Clock, 
+    ShoppingBag, 
+    Eye,
+    MessageCircle
 } from 'lucide-vue-next';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -176,31 +175,33 @@ const totalWeeklyOrders = computed(() => {
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 print:hidden">
                 <div>
                     <div class="flex items-center space-x-3 mb-1">
-                        <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 shadow-sm">
-                            <ChefHat class="w-6 h-6" />
+                        <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-800 shadow-2xs">
+                            <ChefHat class="w-5 h-5" />
                         </div>
-                        <h1 class="text-3xl font-black text-gray-900 tracking-tight">Laporan Pemesanan Dapur</h1>
+                        <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                            Laporan Pemesanan Dapur
+                        </h1>
                     </div>
                 </div>
                 
                 <!-- Action Controls -->
-                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
                     <!-- Week Navigator -->
-                    <div class="flex items-center bg-white px-3 py-1.5 rounded-xl border border-gray-200 shadow-sm">
-                        <Link :href="getPrevWeekUrl()" class="p-1.5 text-gray-500 hover:text-orange-600 rounded-lg hover:bg-orange-50 transition-colors" title="Minggu Sebelumnya">
-                            <ChevronLeft class="w-5 h-5" />
+                    <div class="flex items-center bg-white px-2.5 py-1 rounded-xl border border-gray-300 shadow-2xs">
+                        <Link :href="getPrevWeekUrl()" class="p-1.5 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors" title="Minggu Sebelumnya">
+                            <ChevronLeft class="w-4 h-4" />
                         </Link>
                         <div class="text-xs sm:text-sm font-bold text-gray-800 px-3 flex items-center whitespace-nowrap">
-                            <CalendarIcon class="w-4 h-4 mr-2 text-orange-500" />
+                            <CalendarIcon class="w-3.5 h-3.5 mr-2 text-gray-500" />
                             {{ dayjs(currentWeekStart).format('DD MMM') }} - {{ dayjs(currentWeekStart).add(4, 'day').format('DD MMM YYYY') }}
                         </div>
-                        <Link :href="getNextWeekUrl()" class="p-1.5 text-gray-500 hover:text-orange-600 rounded-lg hover:bg-orange-50 transition-colors" title="Minggu Berikutnya">
-                            <ChevronRight class="w-5 h-5" />
+                        <Link :href="getNextWeekUrl()" class="p-1.5 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors" title="Minggu Berikutnya">
+                            <ChevronRight class="w-4 h-4" />
                         </Link>
                     </div>
 
                     <!-- Today / This Week Quick Button -->
-                    <Link :href="getTodayUrl()" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors shadow-sm">
+                    <Link :href="getTodayUrl()" class="px-3.5 py-2 bg-white hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-300 transition-colors shadow-2xs">
                         Hari Ini
                     </Link>
 
@@ -208,9 +209,9 @@ const totalWeeklyOrders = computed(() => {
                     <button 
                         @click="printReport" 
                         type="button" 
-                        class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold rounded-xl shadow-sm shadow-orange-200 transition-all cursor-pointer"
+                        class="inline-flex items-center px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-all cursor-pointer"
                     >
-                        <Printer class="w-4 h-4 mr-2" />
+                        <Printer class="w-4 h-4 mr-1.5" />
                         Cetak Laporan
                     </button>
                 </div>
@@ -233,8 +234,8 @@ const totalWeeklyOrders = computed(() => {
             <div class="mb-10">
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <h2 class="text-xl font-black text-gray-900 flex items-center">
-                            <Utensils class="w-5 h-5 mr-2 text-orange-600" />
+                        <h2 class="text-lg sm:text-xl font-black text-gray-900 flex items-center">
+                            <Utensils class="w-5 h-5 mr-2 text-gray-700" />
                             Ringkasan Porsi Dapur (Senin - Jumat)
                         </h2>
                         <p class="text-xs text-gray-500 font-medium">
@@ -244,7 +245,7 @@ const totalWeeklyOrders = computed(() => {
                 </div>
 
                 <!-- 5-Column Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 print:grid-cols-5 print:gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3.5 print:grid-cols-5 print:gap-2">
                     <div 
                         v-for="(day, idx) in weekDates" 
                         :key="day.date" 
@@ -253,74 +254,74 @@ const totalWeeklyOrders = computed(() => {
                         tabindex="0"
                         @keydown.enter="scrollToDayDetail(idx)"
                         :class="[
-                            'bg-white rounded-2xl shadow-sm border transition-all duration-200 flex flex-col overflow-hidden cursor-pointer group hover:shadow-md select-none',
+                            'bg-white rounded-xl shadow-2xs border transition-all duration-200 flex flex-col overflow-hidden cursor-pointer group hover:shadow-md select-none',
                             selectedDayIndex === idx && !showAllDays 
-                                ? 'border-orange-500 ring-2 ring-orange-200 shadow-md' 
-                                : 'border-gray-200 hover:border-orange-400 hover:-translate-y-0.5'
+                                ? 'border-gray-900 ring-2 ring-gray-900/10 shadow-md' 
+                                : 'border-gray-200 hover:border-gray-400 hover:-translate-y-0.5'
                         ]"
                         :title="'Klik untuk melihat rincian pemesan hari ' + dayjs(day.date).format('dddd, DD MMMM')"
                     >
                         <!-- Day Header Card -->
-                        <div class="bg-gradient-to-r from-gray-50 to-slate-50 group-hover:from-orange-50/60 group-hover:to-amber-50/40 px-4 py-3 border-b border-gray-200 flex items-center justify-between transition-colors print:bg-white print:border-b-2 print:border-gray-900">
+                        <div class="bg-gray-50 group-hover:bg-gray-100/70 px-3.5 py-2.5 border-b border-gray-200 flex items-center justify-between transition-colors print:bg-white print:border-b-2 print:border-gray-900">
                             <div>
-                                <h3 class="font-black text-gray-900 group-hover:text-orange-600 transition-colors capitalize text-base">{{ dayjs(day.date).format('dddd') }}</h3>
-                                <p class="text-xs font-semibold text-gray-500">{{ dayjs(day.date).format('DD MMMM') }}</p>
+                                <h3 class="font-bold text-gray-900 group-hover:text-black transition-colors capitalize text-sm">{{ dayjs(day.date).format('dddd') }}</h3>
+                                <p class="text-[11px] font-medium text-gray-500">{{ dayjs(day.date).format('DD MMMM') }}</p>
                             </div>
                             <!-- Portion count badge -->
                             <div class="text-right">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-black bg-orange-100 text-orange-800 border border-orange-200 group-hover:bg-orange-600 group-hover:text-white transition-colors shadow-xs">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-800 border border-gray-300 group-hover:bg-gray-900 group-hover:text-white transition-colors shadow-2xs">
                                     {{ day.total_portions || 0 }} Porsi
                                 </span>
                             </div>
                         </div>
                         
                         <!-- Menu Items in Day Card -->
-                        <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div class="p-3.5 flex-1 flex flex-col justify-between">
                             <div v-if="day.menus.length === 0" class="h-full flex flex-col items-center justify-center text-center py-8 print:py-2">
                                 <p class="text-xs text-gray-400 italic">Libur / Tidak ada menu</p>
                             </div>
                             
-                            <div v-else class="space-y-3">
+                            <div v-else class="space-y-2.5">
                                 <div 
                                     v-for="menu in day.menus" 
                                     :key="menu.id" 
-                                    class="p-2.5 bg-gray-50 group-hover:bg-orange-50/30 rounded-xl border border-gray-100 group-hover:border-orange-200/60 flex flex-col space-y-2 transition-colors print:bg-white print:border-gray-200 print:p-2"
+                                    class="p-2 bg-gray-50 rounded-lg border border-gray-200 flex flex-col space-y-1.5 transition-colors print:bg-white print:border-gray-200 print:p-2"
                                 >
-                                    <div class="flex items-start space-x-2.5">
+                                    <div class="flex items-start space-x-2">
                                         <img 
                                             v-if="menu.photo_path" 
                                             :src="menu.photo_path" 
                                             :alt="menu.name"
-                                            class="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-gray-200 print:hidden" 
+                                            class="w-9 h-9 rounded-md object-cover flex-shrink-0 border border-gray-200 print:hidden" 
                                         />
-                                        <div v-else class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600 flex-shrink-0 print:hidden">
-                                            <Utensils class="w-5 h-5" />
+                                        <div v-else class="w-9 h-9 rounded-md bg-gray-200 flex items-center justify-center text-gray-600 flex-shrink-0 print:hidden">
+                                            <Utensils class="w-4 h-4" />
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <p class="text-xs font-extrabold text-gray-900 leading-snug truncate" :title="menu.name">
+                                            <p class="text-xs font-bold text-gray-900 leading-snug truncate" :title="menu.name">
                                                 {{ menu.name }}
                                             </p>
                                         </div>
                                     </div>
                                     
                                     <!-- Portion highlight pill -->
-                                    <div class="bg-orange-50 text-orange-800 border border-orange-100 rounded-lg py-1 px-2.5 text-center flex items-center justify-between print:bg-gray-100 print:text-gray-900 print:border-gray-300">
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600">Dipesan:</span>
-                                        <span class="text-sm font-black text-orange-700">{{ menu.total_portions }} <span class="text-xs font-bold">porsi</span></span>
+                                    <div class="bg-white text-gray-800 border border-gray-200 rounded-md py-1 px-2 text-center flex items-center justify-between print:bg-gray-100 print:text-gray-900 print:border-gray-300">
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Dipesan:</span>
+                                        <span class="text-xs font-black text-gray-900">{{ menu.total_portions }} <span class="text-[10px] font-semibold text-gray-500">porsi</span></span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Bottom Action: View Customer Details for this day -->
-                            <div class="mt-4 pt-3 border-t border-gray-100 print:hidden">
+                            <div class="mt-3.5 pt-2.5 border-t border-gray-100 print:hidden">
                                 <button
                                     @click.stop="scrollToDayDetail(idx)"
                                     type="button"
-                                    class="w-full flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl text-xs font-bold transition-all bg-gray-100 group-hover:bg-orange-600 text-gray-700 group-hover:text-white cursor-pointer"
+                                    class="w-full flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded-lg text-xs font-bold transition-all bg-gray-100 group-hover:bg-gray-900 text-gray-700 group-hover:text-white cursor-pointer"
                                 >
                                     <Users class="w-3.5 h-3.5 text-gray-500 group-hover:text-white" />
                                     <span>Lihat Pemesan</span>
-                                    <span class="ml-1 px-1.5 py-0.2 bg-white text-gray-800 group-hover:bg-orange-700 group-hover:text-white rounded-md text-[10px] font-black">
+                                    <span class="ml-1 px-1.5 py-0.2 bg-white text-gray-800 group-hover:bg-gray-800 group-hover:text-white rounded text-[10px] font-black border border-gray-200 group-hover:border-gray-700">
                                         {{ day.total_customers || 0 }}
                                     </span>
                                 </button>
@@ -331,23 +332,23 @@ const totalWeeklyOrders = computed(() => {
             </div>
 
             <!-- SECTION 2: RINCIAN PEMESANAN PELANGGAN PER HARI (Detailed Breakdown) -->
-            <div id="rincian-pemesan-section" class="scroll-mt-8 pt-4">
-                <div class="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 print:border-0 print:shadow-none print:p-0">
+            <div id="rincian-pemesan-section" class="scroll-mt-8 pt-2">
+                <div class="bg-white rounded-2xl border border-gray-300 shadow-xs p-6 print:border-0 print:shadow-none print:p-0">
                     
                     <!-- Section Title & Subtitle -->
-                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-gray-100 gap-4">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-5 border-b border-gray-200 gap-3">
                         <div>
                             <div class="flex items-center space-x-2">
-                                <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-black uppercase tracking-wider">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-300 uppercase tracking-wider">
                                     Detail Pelanggan
                                 </span>
                             </div>
-                            <h2 class="text-2xl font-black text-gray-900 mt-1 flex items-center">
-                                <Users class="w-6 h-6 mr-2 text-blue-600" />
-                                Rincian Pesanan
+                            <h2 class="text-xl sm:text-2xl font-black text-gray-900 mt-1 flex items-center">
+                                <Users class="w-5 h-5 mr-2 text-gray-800" />
+                                Rincian Pesanan Pelanggan
                             </h2>
-                            <p class="text-sm text-gray-500 font-medium mt-0.5">
-                                Detail Informasi Pemesanan Pelanggan
+                            <p class="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
+                                Detail informasi pemesanan menu per hari layanan dapur
                             </p>
                         </div>
 
@@ -355,35 +356,35 @@ const totalWeeklyOrders = computed(() => {
                         <div class="flex items-center gap-2 print:hidden">
                             <button
                                 @click="printReport"
-                                class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                                class="inline-flex items-center px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg border border-gray-300 transition-colors cursor-pointer"
                             >
-                                <Printer class="w-4 h-4 mr-1.5 text-gray-500" />
+                                <Printer class="w-3.5 h-3.5 mr-1.5 text-gray-500" />
                                 Cetak Rincian
                             </button>
                         </div>
                     </div>
 
                     <!-- Day Selector Tabs (Senin - Jumat & Semua Hari) -->
-                    <div class="mt-6 flex flex-wrap gap-2 print:hidden">
+                    <div class="mt-5 flex flex-wrap gap-2 print:hidden">
                         <button
                             v-for="(day, idx) in weekDates"
                             :key="day.date"
                             @click="selectedDayIndex = idx; showAllDays = false;"
                             :class="[
-                                'px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 cursor-pointer',
+                                'px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center space-x-2 cursor-pointer',
                                 selectedDayIndex === idx && !showAllDays
-                                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200 scale-102'
-                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                                    ? 'bg-gray-900 text-white shadow-xs'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                             ]"
                         >
                             <span>{{ dayjs(day.date).format('dddd') }}</span>
                             <span class="text-xs opacity-75 font-normal">({{ dayjs(day.date).format('DD MMM') }})</span>
                             <span 
                                 :class="[
-                                    'px-1.5 py-0.5 rounded-full text-[10px] font-black',
+                                    'px-1.5 py-0.2 rounded text-[10px] font-bold',
                                     selectedDayIndex === idx && !showAllDays 
-                                        ? 'bg-blue-700 text-white' 
-                                        : 'bg-gray-200 text-gray-800'
+                                        ? 'bg-gray-800 text-white' 
+                                        : 'bg-gray-100 text-gray-800 border border-gray-200'
                                 ]"
                             >
                                 {{ day.total_customers || 0 }}
@@ -394,19 +395,19 @@ const totalWeeklyOrders = computed(() => {
                         <button
                             @click="showAllDays = true"
                             :class="[
-                                'px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm transition-all flex items-center space-x-1.5 cursor-pointer',
+                                'px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center space-x-1.5 cursor-pointer',
                                 showAllDays
-                                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200 scale-102'
-                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                                    ? 'bg-gray-900 text-white shadow-xs'
+                                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                             ]"
                         >
                             <span>Semua Hari (Senin - Jumat)</span>
                             <span 
                                 :class="[
-                                    'px-1.5 py-0.5 rounded-full text-[10px] font-black',
+                                    'px-1.5 py-0.2 rounded text-[10px] font-bold',
                                     showAllDays 
-                                        ? 'bg-blue-700 text-white' 
-                                        : 'bg-gray-200 text-gray-800'
+                                        ? 'bg-gray-800 text-white' 
+                                        : 'bg-gray-100 text-gray-800 border border-gray-200'
                                 ]"
                             >
                                 {{ totalWeeklyOrders }}
@@ -415,30 +416,30 @@ const totalWeeklyOrders = computed(() => {
                     </div>
 
                     <!-- Search and Filter Bar -->
-                    <div class="mt-6 flex flex-col sm:flex-row items-center gap-3 print:hidden">
+                    <div class="mt-5 flex flex-col sm:flex-row items-center gap-2.5 print:hidden">
                         <!-- Search Input -->
                         <div class="relative flex-1 w-full">
-                            <Search class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                            <Search class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
                                 v-model="searchQuery"
                                 type="text"
                                 placeholder="Cari nama pemesan, kode pesanan, nomor telepon, atau menu..."
-                                class="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium text-gray-800"
+                                class="w-full pl-9 pr-9 py-2 text-xs sm:text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 transition-all font-medium text-gray-800"
                             />
                             <button 
                                 v-if="searchQuery" 
                                 @click="searchQuery = ''"
                                 class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-0.5"
                             >
-                                <X class="w-4 h-4" />
+                                <X class="w-3.5 h-3.5" />
                             </button>
                         </div>
 
                         <!-- Menu Filter Dropdown -->
-                        <div class="w-full sm:w-64 relative flex-shrink-0">
+                        <div class="w-full sm:w-60 relative flex-shrink-0">
                             <select
                                 v-model="selectedMenuFilter"
-                                class="w-full py-2.5 pl-3 pr-8 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-gray-800 cursor-pointer"
+                                class="w-full py-2 pl-3 pr-8 text-xs sm:text-sm bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-gray-900 font-medium text-gray-800 cursor-pointer"
                             >
                                 <option value="all">Semua Menu</option>
                                 <option v-for="menu in availableMenus" :key="menu.id" :value="menu.id">
@@ -449,82 +450,82 @@ const totalWeeklyOrders = computed(() => {
                     </div>
 
                     <!-- Active Day Orders Display (When a single day is selected) -->
-                    <div v-if="!showAllDays && activeDay" class="mt-6">
+                    <div v-if="!showAllDays && activeDay" class="mt-5">
                         <!-- Day Highlight Banner -->
-                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-3.5 mb-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <div>
-                                <h3 class="text-lg font-black text-blue-950 capitalize flex items-center">
-                                    <CalendarIcon class="w-5 h-5 mr-2 text-blue-600" />
+                                <h3 class="text-sm sm:text-base font-bold text-gray-900 capitalize flex items-center">
+                                    <CalendarIcon class="w-4 h-4 mr-2 text-gray-700" />
                                     Pesanan Hari {{ dayjs(activeDay.date).format('dddd, DD MMMM YYYY') }}
                                 </h3>
-                                <p class="text-xs text-blue-700 font-semibold mt-0.5">
+                                <p class="text-xs text-gray-500 font-medium mt-0.5">
                                     Daftar seluruh pelanggan yang telah membayar dan harus disiapkan makanannya pada hari ini
                                 </p>
                             </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="bg-white px-3 py-1 rounded-xl text-xs font-black text-blue-900 border border-blue-200 shadow-xs">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-white px-2.5 py-1 rounded-md text-xs font-bold text-gray-800 border border-gray-300 shadow-2xs">
                                     {{ (filterOrders(activeDay.customer_orders) || []).length }} Pemesan
                                 </span>
-                                <span class="bg-blue-600 px-3 py-1 rounded-xl text-xs font-black text-white shadow-xs">
+                                <span class="bg-gray-900 px-2.5 py-1 rounded-md text-xs font-bold text-white shadow-2xs">
                                     {{ activeDay.total_portions || 0 }} Total Porsi
                                 </span>
                             </div>
                         </div>
 
                         <!-- Orders List / Empty States -->
-                        <div v-if="!activeDay.customer_orders || activeDay.customer_orders.length === 0" class="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                            <ShoppingBag class="w-12 h-12 text-gray-300 mx-auto mb-2" />
-                            <h4 class="text-sm font-bold text-gray-700">Tidak ada pesanan untuk hari ini</h4>
-                            <p class="text-xs text-gray-400 mt-1">Belum ada pelanggan yang memesan atau pembayaran belum berstatus 'paid'.</p>
+                        <div v-if="!activeDay.customer_orders || activeDay.customer_orders.length === 0" class="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                            <ShoppingBag class="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                            <h4 class="text-xs sm:text-sm font-bold text-gray-700">Tidak ada pesanan untuk hari ini</h4>
+                            <p class="text-xs text-gray-400 mt-0.5">Belum ada pelanggan yang memesan atau pembayaran belum berstatus 'paid'.</p>
                         </div>
 
-                        <div v-else-if="filterOrders(activeDay.customer_orders).length === 0" class="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <div v-else-if="filterOrders(activeDay.customer_orders).length === 0" class="text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-300">
                             <Search class="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                            <h4 class="text-sm font-bold text-gray-700">Tidak ada data pemesan yang cocok</h4>
-                            <p class="text-xs text-gray-400 mt-1">Coba sesuaikan kata kunci pencarian atau filter menu Anda.</p>
-                            <button @click="searchQuery = ''; selectedMenuFilter = 'all';" class="mt-3 text-xs font-bold text-blue-600 hover:underline">
+                            <h4 class="text-xs sm:text-sm font-bold text-gray-700">Tidak ada data pemesan yang cocok</h4>
+                            <p class="text-xs text-gray-400 mt-0.5">Coba sesuaikan kata kunci pencarian atau filter menu Anda.</p>
+                            <button @click="searchQuery = ''; selectedMenuFilter = 'all';" class="mt-2 text-xs font-bold text-gray-800 hover:underline">
                                 Reset Filter
                             </button>
                         </div>
 
                         <!-- Compact Table / List of Customer Names -->
-                        <div v-else class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs">
+                        <div v-else class="bg-white rounded-xl border border-gray-300 overflow-hidden shadow-2xs">
                             <div class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50/80">
-                                        <tr>
-                                            <th scope="col" class="px-5 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-12">No</th>
-                                            <th scope="col" class="px-5 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Pemesan</th>
-                                            <th scope="col" class="px-5 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">No. Telepon</th>
-                                            <th scope="col" class="px-5 py-3.5 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Chat WA</th>
-                                            <th scope="col" class="px-5 py-3.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kode Order</th>
-                                            <th scope="col" class="px-5 py-3.5 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Total Porsi</th>
-                                            <th scope="col" class="px-5 py-3.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    <thead class="bg-gray-50">
+                                        <tr class="text-gray-600">
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider w-12 border-r border-gray-200">No</th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider border-r border-gray-200">Nama Pemesan</th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider border-r border-gray-200">No. Telepon</th>
+                                            <th scope="col" class="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider border-r border-gray-200">Chat WA</th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider border-r border-gray-200">Kode Order</th>
+                                            <th scope="col" class="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider border-r border-gray-200">Total Porsi</th>
+                                            <th scope="col" class="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                    <tbody class="divide-y divide-gray-200 bg-white text-xs sm:text-sm text-gray-800">
                                         <tr 
                                             v-for="(order, idx) in filterOrders(activeDay.customer_orders)" 
                                             :key="order.order_id || idx"
                                             @click="openOrderDetailModal(order, activeDay)"
-                                            class="hover:bg-blue-50/60 transition-colors cursor-pointer group"
+                                            class="hover:bg-slate-50 transition-colors cursor-pointer group"
                                         >
-                                            <td class="px-5 py-4 whitespace-nowrap text-xs font-semibold text-gray-400">
+                                            <td class="px-4 py-3 whitespace-nowrap text-xs font-semibold text-gray-400 border-r border-gray-200 text-center">
                                                 {{ idx + 1 }}
                                             </td>
-                                            <td class="px-5 py-4 whitespace-nowrap">
-                                                <div class="flex items-center space-x-3">
-                                                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs flex-shrink-0">
+                                            <td class="px-4 py-3 whitespace-nowrap border-r border-gray-200">
+                                                <div class="flex items-center space-x-2.5">
+                                                    <div class="w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center text-gray-700 font-bold text-xs flex-shrink-0">
                                                         {{ (order.customer.name || 'P').charAt(0).toUpperCase() }}
                                                     </div>
                                                     <div>
-                                                        <div class="flex items-center space-x-2">
-                                                            <span class="font-bold text-sm text-gray-900 group-hover:text-blue-600 transition-colors">
+                                                        <div class="flex items-center space-x-1.5">
+                                                            <span class="font-bold text-sm text-gray-900 group-hover:text-black transition-colors">
                                                                 {{ order.customer.name }}
                                                             </span>
                                                             <span 
                                                                 v-if="order.customer.allergens && order.customer.allergens.length > 0" 
-                                                                class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700"
+                                                                class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200"
                                                                 title="Memiliki Pantangan Alergi"
                                                             >
                                                                 <AlertTriangle class="w-3 h-3 mr-0.5 text-red-600" />
@@ -535,41 +536,41 @@ const totalWeeklyOrders = computed(() => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="px-5 py-4 whitespace-nowrap text-xs font-medium text-gray-700">
+                                            <td class="px-4 py-3 whitespace-nowrap text-xs font-medium text-gray-700 border-r border-gray-200">
                                                 {{ order.customer.phone || '-' }}
                                             </td>
-                                            <td class="px-5 py-4 whitespace-nowrap text-center">
+                                            <td class="px-4 py-3 whitespace-nowrap text-center border-r border-gray-200">
                                                 <a 
                                                     v-if="order.customer.phone" 
                                                     :href="getWhatsAppUrl(order.customer.phone, order.customer.name, order.order_code)" 
                                                     target="_blank" 
                                                     rel="noopener noreferrer" 
                                                     @click.stop
-                                                    class="inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-200 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs"
+                                                    class="inline-flex items-center px-2.5 py-1 bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 rounded-md text-xs font-semibold transition-all shadow-2xs" 
                                                     title="Hubungi Pelanggan via WhatsApp"
                                                 >
-                                                    💬 Hubungi WA
+                                                    <MessageCircle class="w-3.5 h-3.5 mr-1 text-gray-600" /> Chat WA
                                                 </a>
                                                 <span v-else class="text-xs text-gray-400 italic">-</span>
                                             </td>
-                                            <td class="px-5 py-4 whitespace-nowrap">
-                                                <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-mono font-bold bg-gray-100 text-gray-800">
+                                            <td class="px-4 py-3 whitespace-nowrap border-r border-gray-200">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-gray-100 text-gray-800 border border-gray-200">
                                                     #{{ order.order_code }}
                                                 </span>
                                             </td>
-                                            <td class="px-5 py-4 whitespace-nowrap text-center">
-                                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black bg-orange-100 text-orange-900">
+                                            <td class="px-4 py-3 whitespace-nowrap text-center border-r border-gray-200">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-800 border border-gray-200">
                                                     {{ order.total_portions }} Porsi
                                                 </span>
                                             </td>
-                                            <td class="px-5 py-4 whitespace-nowrap text-right">
+                                            <td class="px-4 py-3 whitespace-nowrap text-center">
                                                 <button 
                                                     @click.stop="openOrderDetailModal(order, activeDay)"
                                                     type="button"
-                                                    class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer group-hover:bg-blue-600 group-hover:text-white"
+                                                    class="inline-flex items-center px-2.5 py-1 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-md text-xs font-semibold transition-all shadow-2xs cursor-pointer"
                                                 >
-                                                    <Eye class="w-3.5 h-3.5 mr-1" />
-                                                    <span>Lihat Detail</span>
+                                                    <Eye class="w-3.5 h-3.5 mr-1 text-gray-600" />
+                                                    <span>Detail</span>
                                                 </button>
                                             </td>
                                         </tr>
@@ -580,18 +581,18 @@ const totalWeeklyOrders = computed(() => {
                     </div>
 
                     <!-- All Days Display (When "Semua Hari" is clicked) -->
-                    <div v-else-if="showAllDays" class="mt-6 space-y-6">
-                        <div v-for="day in weekDates" :key="day.date" class="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-xs">
+                    <div v-else-if="showAllDays" class="mt-5 space-y-5">
+                        <div v-for="day in weekDates" :key="day.date" class="border border-gray-300 rounded-xl overflow-hidden bg-white shadow-2xs">
                             <!-- Day Section Header -->
-                            <div class="bg-gray-100/80 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
-                                <h3 class="font-black text-gray-900 capitalize text-sm sm:text-base flex items-center">
-                                    <CalendarIcon class="w-4 h-4 mr-2 text-blue-600" />
+                            <div class="bg-gray-50 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
+                                <h3 class="font-bold text-gray-900 capitalize text-sm sm:text-base flex items-center">
+                                    <CalendarIcon class="w-4 h-4 mr-2 text-gray-700" />
                                     {{ dayjs(day.date).format('dddd, DD MMMM YYYY') }}
                                 </h3>
                                 <div class="flex items-center space-x-2 text-xs font-bold text-gray-700">
                                     <span>{{ day.total_customers || 0 }} Pemesan</span>
                                     <span>•</span>
-                                    <span class="text-orange-600">{{ day.total_portions || 0 }} Porsi</span>
+                                    <span class="text-gray-900">{{ day.total_portions || 0 }} Porsi</span>
                                 </div>
                             </div>
 
@@ -602,71 +603,71 @@ const totalWeeklyOrders = computed(() => {
                             <div v-else class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50/50">
-                                        <tr>
-                                            <th scope="col" class="px-5 py-2.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-12">No</th>
-                                            <th scope="col" class="px-5 py-2.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Pemesan</th>
-                                            <th scope="col" class="px-5 py-2.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">No. Telepon</th>
-                                            <th scope="col" class="px-5 py-2.5 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Chat WA</th>
-                                            <th scope="col" class="px-5 py-2.5 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kode Order</th>
-                                            <th scope="col" class="px-5 py-2.5 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Total Porsi</th>
-                                            <th scope="col" class="px-5 py-2.5 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
+                                        <tr class="text-gray-600">
+                                            <th scope="col" class="px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider w-12 border-r border-gray-200">No</th>
+                                            <th scope="col" class="px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider border-r border-gray-200">Nama Pemesan</th>
+                                            <th scope="col" class="px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider border-r border-gray-200">No. Telepon</th>
+                                            <th scope="col" class="px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider border-r border-gray-200">Chat WA</th>
+                                            <th scope="col" class="px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider border-r border-gray-200">Kode Order</th>
+                                            <th scope="col" class="px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider border-r border-gray-200">Total Porsi</th>
+                                            <th scope="col" class="px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider">Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-100 bg-white">
+                                    <tbody class="divide-y divide-gray-200 bg-white text-xs sm:text-sm text-gray-800">
                                         <tr 
                                             v-for="(order, idx) in filterOrders(day.customer_orders)" 
                                             :key="order.order_id || idx"
                                             @click="openOrderDetailModal(order, day)"
-                                            class="hover:bg-blue-50/60 transition-colors cursor-pointer group"
+                                            class="hover:bg-slate-50 transition-colors cursor-pointer group"
                                         >
-                                            <td class="px-5 py-3 whitespace-nowrap text-xs font-semibold text-gray-400">
+                                            <td class="px-4 py-2.5 whitespace-nowrap text-xs font-semibold text-gray-400 border-r border-gray-200 text-center">
                                                 {{ idx + 1 }}
                                             </td>
-                                            <td class="px-5 py-3 whitespace-nowrap">
-                                                <div class="flex items-center space-x-2.5">
-                                                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-xs flex-shrink-0">
+                                            <td class="px-4 py-2.5 whitespace-nowrap border-r border-gray-200">
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="w-7 h-7 rounded-md bg-gray-200 flex items-center justify-center text-gray-700 font-bold text-xs flex-shrink-0">
                                                         {{ (order.customer.name || 'P').charAt(0).toUpperCase() }}
                                                     </div>
-                                                    <span class="font-bold text-sm text-gray-900 group-hover:text-blue-600 transition-colors">
+                                                    <span class="font-bold text-sm text-gray-900 group-hover:text-black transition-colors">
                                                         {{ order.customer.name }}
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td class="px-5 py-3 whitespace-nowrap text-xs text-gray-700 font-medium">
+                                            <td class="px-4 py-2.5 whitespace-nowrap text-xs text-gray-700 font-medium border-r border-gray-200">
                                                 {{ order.customer.phone || '-' }}
                                             </td>
-                                            <td class="px-5 py-3 whitespace-nowrap text-center">
+                                            <td class="px-4 py-2.5 whitespace-nowrap text-center border-r border-gray-200">
                                                 <a 
                                                     v-if="order.customer.phone" 
                                                     :href="getWhatsAppUrl(order.customer.phone, order.customer.name, order.order_code)" 
                                                     target="_blank" 
                                                     rel="noopener noreferrer" 
                                                     @click.stop
-                                                    class="inline-flex items-center px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-200 rounded-lg text-xs font-bold transition-all shadow-2xs hover:shadow-xs"
+                                                    class="inline-flex items-center px-2 py-0.5 bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 rounded text-xs font-semibold transition-all shadow-2xs" 
                                                     title="Hubungi Pelanggan via WhatsApp"
                                                 >
-                                                    💬 Hubungi WA
+                                                    <MessageCircle class="w-3.5 h-3.5 mr-1 text-gray-600" /> Chat WA
                                                 </a>
                                                 <span v-else class="text-xs text-gray-400 italic">-</span>
                                             </td>
-                                            <td class="px-5 py-3 whitespace-nowrap">
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-gray-100 text-gray-800">
+                                            <td class="px-4 py-2.5 whitespace-nowrap border-r border-gray-200">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-gray-100 text-gray-800 border border-gray-200">
                                                     #{{ order.order_code }}
                                                 </span>
                                             </td>
-                                            <td class="px-5 py-3 whitespace-nowrap text-center">
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-black bg-orange-100 text-orange-900">
+                                            <td class="px-4 py-2.5 whitespace-nowrap text-center border-r border-gray-200">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-800 border border-gray-200">
                                                     {{ order.total_portions }} Porsi
                                                 </span>
                                             </td>
-                                            <td class="px-5 py-3 whitespace-nowrap text-right">
+                                            <td class="px-4 py-2.5 whitespace-nowrap text-center">
                                                 <button 
                                                     @click.stop="openOrderDetailModal(order, day)"
                                                     type="button"
-                                                    class="inline-flex items-center px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer group-hover:bg-blue-600 group-hover:text-white"
+                                                    class="inline-flex items-center px-2 py-0.5 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded text-xs font-semibold transition-all shadow-2xs cursor-pointer"
                                                 >
-                                                    <Eye class="w-3.5 h-3.5 mr-1" />
-                                                    <span>Lihat Detail</span>
+                                                    <Eye class="w-3.5 h-3.5 mr-1 text-gray-600" />
+                                                    <span>Detail</span>
                                                 </button>
                                             </td>
                                         </tr>
@@ -679,48 +680,48 @@ const totalWeeklyOrders = computed(() => {
                 </div>
             </div>
 
-            <!-- Modal Detail Pesanan Pelanggan -->
+            <!-- Modal Detail Pesanan Pelanggan (Clean Monochromatic Modal) -->
             <div v-if="isDetailModalOpen && selectedOrder" class="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
                 <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
                     <!-- Backdrop -->
-                    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity" @click="closeDetailModal"></div>
+                    <div class="fixed inset-0 bg-slate-900/30 backdrop-blur-xs transition-opacity" @click="closeDetailModal"></div>
 
                     <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
                     <!-- Modal Card -->
-                    <div class="relative z-10 inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100">
+                    <div class="relative z-10 inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-300">
                         <!-- Modal Header -->
-                        <div class="bg-gradient-to-r from-gray-50 to-slate-50 px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                        <div class="bg-gray-50 px-5 py-4 border-b border-gray-200 flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-sm flex-shrink-0">
+                                <div class="w-10 h-10 rounded-lg bg-gray-200 text-gray-800 flex items-center justify-center font-bold text-base flex-shrink-0">
                                     {{ (selectedOrder.customer?.name || 'P').charAt(0).toUpperCase() }}
                                 </div>
                                 <div>
                                     <div class="flex items-center space-x-2">
-                                        <h3 class="text-lg font-black text-gray-900 leading-tight">
+                                        <h3 class="text-base font-bold text-gray-900 leading-tight">
                                             {{ selectedOrder.customer?.name }}
                                         </h3>
-                                        <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-gray-200 text-gray-800">
+                                        <span class="px-1.5 py-0.2 rounded text-[11px] font-mono font-bold bg-gray-200 text-gray-700">
                                             #{{ selectedOrder.order_code }}
                                         </span>
                                     </div>
                                     <p class="text-xs text-gray-500 font-medium mt-0.5">
-                                        Layanan: {{ selectedOrderDay ? dayjs(selectedOrderDay.date).format('dddd, DD MMMM YYYY') : '-' }}
+                                        Hari Layanan: {{ selectedOrderDay ? dayjs(selectedOrderDay.date).format('dddd, DD MMMM YYYY') : '-' }}
                                     </p>
                                 </div>
                             </div>
                             <button 
                                 @click="closeDetailModal"
-                                class="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-200/60 transition-colors cursor-pointer"
+                                class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
                             >
-                                <X class="w-5 h-5" />
+                                <X class="w-4 h-4" />
                             </button>
                         </div>
 
                         <!-- Modal Body -->
-                        <div class="p-6 space-y-5">
+                        <div class="p-5 space-y-4">
                             <!-- Customer Info Bar -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50 p-3.5 rounded-2xl border border-gray-100 text-xs">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl border border-gray-200 text-xs">
                                 <div>
                                     <span class="text-gray-400 font-semibold uppercase tracking-wider text-[10px] block">No. Handphone:</span>
                                     <div class="flex items-center space-x-2 mt-0.5">
@@ -730,9 +731,9 @@ const totalWeeklyOrders = computed(() => {
                                             :href="getWhatsAppUrl(selectedOrder.customer?.phone, selectedOrder.customer?.name, selectedOrder.order_code)"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            class="inline-flex items-center text-[11px] font-bold text-emerald-600 hover:underline"
+                                            class="inline-flex items-center text-[11px] font-bold text-gray-700 hover:underline"
                                         >
-                                            💬 Chat WA
+                                            <MessageCircle class="w-3 h-3 mr-0.5" /> WA
                                         </a>
                                     </div>
                                 </div>
@@ -745,68 +746,68 @@ const totalWeeklyOrders = computed(() => {
                             <!-- Allergen Alert if customer has allergens -->
                             <div 
                                 v-if="selectedOrder.customer?.allergens && selectedOrder.customer.allergens.length > 0"
-                                class="p-3 bg-red-50 border border-red-200 rounded-2xl flex items-start space-x-2 text-xs text-red-800"
+                                class="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start space-x-2 text-xs text-red-800"
                             >
                                 <AlertTriangle class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <span class="font-black">Catatan Pantangan Alergi:</span>
+                                    <span class="font-bold">Catatan Pantangan Alergi:</span>
                                     <p class="font-medium mt-0.5">{{ selectedOrder.customer.allergens.join(', ') }}</p>
                                 </div>
                             </div>
 
                             <!-- Detail Menu Table -->
                             <div>
-                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 flex items-center">
-                                    <Utensils class="w-3.5 h-3.5 mr-1 text-orange-500" />
+                                <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
+                                    <Utensils class="w-3.5 h-3.5 mr-1 text-gray-600" />
                                     Menu & Porsi yang Dipesan
                                 </h4>
-                                <div class="border border-gray-100 rounded-2xl overflow-hidden shadow-2xs">
-                                    <table class="min-w-full divide-y divide-gray-100 text-xs">
+                                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
+                                    <table class="min-w-full divide-y divide-gray-200 text-xs">
                                         <thead class="bg-gray-50">
                                             <tr>
-                                                <th class="px-4 py-2.5 text-left font-bold text-gray-500">Menu</th>
-                                                <th class="px-4 py-2.5 text-center font-bold text-gray-500">Porsi</th>
-                                                <th class="px-4 py-2.5 text-right font-bold text-gray-500">Harga</th>
-                                                <th class="px-4 py-2.5 text-right font-bold text-gray-500">Subtotal</th>
+                                                <th class="px-3.5 py-2 text-left font-bold text-gray-600 border-r border-gray-200">Menu</th>
+                                                <th class="px-3.5 py-2 text-center font-bold text-gray-600 border-r border-gray-200">Porsi</th>
+                                                <th class="px-3.5 py-2 text-right font-bold text-gray-600 border-r border-gray-200">Harga</th>
+                                                <th class="px-3.5 py-2 text-right font-bold text-gray-600">Subtotal</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-gray-100">
-                                            <tr v-for="item in selectedOrder.items" :key="item.id" class="hover:bg-gray-50/50">
-                                                <td class="px-4 py-3">
-                                                    <div class="flex items-center space-x-2.5">
+                                        <tbody class="divide-y divide-gray-200 bg-white">
+                                            <tr v-for="item in selectedOrder.items" :key="item.id" class="hover:bg-gray-50/60">
+                                                <td class="px-3.5 py-2.5 border-r border-gray-200">
+                                                    <div class="flex items-center space-x-2">
                                                         <img 
                                                             v-if="item.menu_photo" 
                                                             :src="item.menu_photo" 
                                                             :alt="item.menu_name"
-                                                            class="w-9 h-9 rounded-lg object-cover border border-gray-100" 
+                                                            class="w-7 h-7 rounded object-cover border border-gray-200" 
                                                         />
-                                                        <div v-else class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
-                                                            <Utensils class="w-4 h-4" />
+                                                        <div v-else class="w-7 h-7 rounded bg-gray-200 flex items-center justify-center text-gray-600">
+                                                            <Utensils class="w-3.5 h-3.5" />
                                                         </div>
                                                         <span class="font-bold text-gray-900">{{ item.menu_name }}</span>
                                                     </div>
                                                 </td>
-                                                <td class="px-4 py-3 text-center">
-                                                    <span class="inline-flex items-center px-2 py-0.5 bg-orange-100 text-orange-900 rounded-md font-black text-xs">
-                                                        {{ item.portion_quantity }} porsi
+                                                <td class="px-3.5 py-2.5 text-center border-r border-gray-200">
+                                                    <span class="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-900 rounded font-bold text-xs border border-gray-200">
+                                                        {{ item.portion_quantity }}x
                                                     </span>
                                                 </td>
-                                                <td class="px-4 py-3 text-right text-gray-600 font-medium">
+                                                <td class="px-3.5 py-2.5 text-right text-gray-600 font-medium border-r border-gray-200">
                                                     {{ formatPrice(item.unit_price) }}
                                                 </td>
-                                                <td class="px-4 py-3 text-right font-bold text-gray-900">
+                                                <td class="px-3.5 py-2.5 text-right font-bold text-gray-900">
                                                     {{ formatPrice(item.subtotal) }}
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        <tfoot class="bg-gray-50/80 font-bold border-t border-gray-200">
+                                        <tfoot class="bg-gray-50 font-bold border-t border-gray-200">
                                             <tr>
-                                                <td class="px-4 py-2.5 text-gray-700">Total Porsi:</td>
-                                                <td class="px-4 py-2.5 text-center text-orange-600 font-black">
+                                                <td class="px-3.5 py-2 text-gray-700 border-r border-gray-200">Total Porsi:</td>
+                                                <td class="px-3.5 py-2 text-center text-gray-900 font-black border-r border-gray-200">
                                                     {{ selectedOrder.total_portions }} Porsi
                                                 </td>
-                                                <td class="px-4 py-2.5 text-right text-gray-700">Total:</td>
-                                                <td class="px-4 py-2.5 text-right text-gray-900 font-black">
+                                                <td class="px-3.5 py-2 text-right text-gray-700 border-r border-gray-200">Total:</td>
+                                                <td class="px-3.5 py-2 text-right text-gray-900 font-black">
                                                     {{ formatPrice(selectedOrder.items?.reduce((a, b) => a + (b.subtotal || 0), 0)) }}
                                                 </td>
                                             </tr>
@@ -817,11 +818,11 @@ const totalWeeklyOrders = computed(() => {
                         </div>
 
                         <!-- Modal Footer -->
-                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-end">
+                        <div class="bg-gray-50 px-5 py-3 border-t border-gray-200 flex justify-end">
                             <button 
                                 type="button" 
                                 @click="closeDetailModal"
-                                class="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                                class="px-5 py-2 bg-gray-900 hover:bg-black text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
                             >
                                 Tutup
                             </button>

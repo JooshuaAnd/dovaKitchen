@@ -18,6 +18,7 @@ const routes = {
     'birthday-reward.claim': '/birthday-reward/claim',
     'checkout.store': '/checkout',
     'history.index': '/history',
+    'orders.voucher.apply': '/orders',
     'profile.edit': '/profile',
     'profile.update': '/profile',
     'profile.password': '/profile/password',
@@ -31,6 +32,8 @@ const routes = {
     'admin.weekly-management.update': '/admin/weekly-management',
     'admin.users.index': '/admin/users',
     'admin.users.destroy': '/admin/users',
+    'admin.vouchers.index': '/admin/vouchers',
+    'admin.vouchers.store': '/admin/vouchers',
     'admin.orders.index': '/admin/orders',
     'admin.kitchen-report.index': '/admin/kitchen-report',
     'admin.allergens.index': '/admin/allergens',
@@ -47,11 +50,16 @@ window.route = (name, params) => {
     }
     
     if (name === 'orders.show') return `/orders/${params}`;
+    if (name === 'orders.voucher.apply') return `/orders/${params}/voucher`;
     if (name === 'payment-proof.store') return `/orders/${params}/payment-proof`;
     if (name === 'admin.menus.edit') return `/admin/menus/${params}/edit`;
     if (name === 'admin.menus.update') return `/admin/menus/${params}`;
     if (name === 'admin.menus.destroy') return `/admin/menus/${params}`;
     if (name === 'admin.users.destroy') return `/admin/users/${params}`;
+    if (name === 'admin.vouchers.destroy') return `/admin/vouchers/${params}`;
+    if (name === 'admin.voucher-templates.destroy') return `/admin/voucher-templates/${params}`;
+    if (name === 'admin.users.vouchers.store') return `/admin/users/${params}/vouchers`;
+    if (name === 'admin.users.vouchers.assign') return `/admin/users/${params[0]}/vouchers/${params[1]}`;
     if (name === 'admin.orders.verify') return `/admin/orders/${params}/verify`;
     
     let path = routes[name] || (typeof name === 'string' && name.startsWith('/') ? name : '/');

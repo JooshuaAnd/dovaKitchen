@@ -49,10 +49,20 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    Route::get('/orders/{order}', function (\App\Models\Order $order) {
-        return Inertia::render('Customer/Checkout/Payment', ['order' => $order]);
+    Route::get('/orders/{order}', function (\Illuminate\Http\Request $request, \App\Models\Order $order) {
+        abort_unless($order->user_id === $request->user()->id, 403);
+
+        return Inertia::render('Customer/Checkout/Payment', [
+            'order' => $order,
+            'vouchers' => $request->user()->vouchers()
+                ->where('is_used', false)
+                ->where('valid_until', '>=', now('Asia/Jakarta'))
+                ->orderBy('valid_until')
+                ->get(),
+        ]);
     })->name('orders.show');
 
+    Route::put('/orders/{order}/voucher', [CheckoutController::class, 'applyVoucher'])->name('orders.voucher.apply');
     Route::post('/orders/{order}/payment-proof', [PaymentProofController::class, 'store'])->name('payment-proof.store');
 });
 
@@ -76,6 +86,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'is_admin'])->group(
     // Users Management
     Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{user}/vouchers', [\App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('users.vouchers.store');
+    Route::post('/users/{user}/vouchers/{voucherTemplate}', [\App\Http\Controllers\Admin\VoucherController::class, 'assignTemplate'])->name('users.vouchers.assign');
+    Route::get('/vouchers', [\App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
+    Route::post('/vouchers', [\App\Http\Controllers\Admin\VoucherController::class, 'storeSegment'])->name('vouchers.store');
+    Route::delete('/vouchers/{voucher}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.destroy');
+    Route::delete('/voucher-templates/{voucherTemplate}', [\App\Http\Controllers\Admin\VoucherController::class, 'destroyTemplate'])->name('voucher-templates.destroy');
 
     // Orders Verification
     Route::get('/orders', [OrderVerificationController::class, 'index'])->name('orders.index');

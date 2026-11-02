@@ -13,9 +13,11 @@ class OrderVerificationController extends Controller
     // 1. MENAMPILKAN DAFTAR SEMUA PESANAN
     public function index()
     {
-        // Mengambil semua data pesanan dari database beserta data user (pelanggan) yang memesannya
-        // Data diurutkan berdasarkan waktu pembuatan (created_at) dari yang paling baru ke yang paling lama
-        $orders = Order::with('user')->orderBy('created_at', 'desc')->get();
+        // Admin hanya menerima pesanan setelah bukti pembayaran diunggah.
+        $orders = Order::with(['user.allergens', 'orderItems.menu'])
+            ->whereIn('payment_status', ['awaiting_verification', 'paid', 'rejected'])
+            ->orderBy('created_at', 'desc')
+            ->get();
         
         // Mengirimkan data pesanan tersebut ke halaman frontend (Vue.js) menggunakan Inertia
         return Inertia::render('Admin/Orders/Index', [
@@ -31,6 +33,8 @@ class OrderVerificationController extends Controller
         $validated = $request->validate([
             'status' => 'required|in:paid,rejected',
         ]);
+
+        abort_unless($order->payment_status === 'awaiting_verification', 422, 'Pesanan belum mengunggah bukti pembayaran.');
 
         // Memperbarui kolom 'payment_status' pada database pesanan sesuai dengan status yang divalidasi
         $order->update([

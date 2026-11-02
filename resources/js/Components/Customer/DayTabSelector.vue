@@ -1,6 +1,4 @@
 <script setup>
-import { Lock } from 'lucide-vue-next';
-
 defineProps({
     days: {
         type: Array,
@@ -17,22 +15,21 @@ defineEmits(['update:modelValue']);
 </script>
 
 <template>
-    <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+    <div class="grid grid-cols-5 gap-1.5">
         <button
             v-for="day in days"
             :key="day.id"
             @click="!day.disabled && $emit('update:modelValue', day.id)"
             :disabled="day.disabled"
             :class="[
-                'flex items-center px-5 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border',
+                'min-w-0 rounded-lg border px-1 py-2 text-xs font-semibold transition-all',
                 modelValue === day.id && !day.disabled
                     ? 'bg-blue-600 text-white border-blue-600 shadow-md'
                     : 'bg-white text-gray-600 border-gray-200',
                 !day.disabled && modelValue !== day.id ? 'hover:bg-gray-50 hover:border-gray-300' : '',
-                day.disabled ? 'opacity-60 cursor-not-allowed bg-gray-100 text-gray-400' : ''
+                day.disabled ? 'cursor-not-allowed bg-gray-100 text-gray-400 opacity-70' : ''
             ]"
         >
-            <Lock v-if="day.disabled" class="w-4 h-4 mr-2 text-gray-400" />
             {{ day.label }}
         </button>
     </div>

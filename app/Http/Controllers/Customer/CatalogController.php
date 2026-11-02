@@ -23,19 +23,12 @@ class CatalogController extends Controller
         $startOfWeek = $now->copy()->startOfWeek();
         $endOfWeek = $startOfWeek->copy()->addDays(4);
 
-        // 2. MENGAMBIL JADWAL MENU (DENGAN FILTER ALERGI)
+        // 2. Mengambil seluruh menu aktif. Kecocokan dietary ditandai pada data menu,
+        // bukan disembunyikan, agar pelanggan tetap dapat melihat pilihan yang tersedia.
         $dailyMenus = DailyMenu::with('menu.allergens') // Ambil jadwal harian berserta menu dan data alergi dari menu tersebut
             ->whereBetween('service_date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()]) // Hanya untuk minggu ini
-            ->whereHas('menu', function ($query) use ($userAllergens) {
-                // Syarat pertama: Menu tersebut statusnya harus aktif
-                $query->where('is_active', true)
-                    // Syarat kedua: Menerapkan fitur CRM "Safety First"
-                    // Jika pelanggan memiliki alergi, singkirkan menu yang mengandung bahan penyebab alergi tersebut
-                    ->when(!empty($userAllergens), function ($q) use ($userAllergens) {
-                        $q->whereDoesntHave('allergens', function ($q2) use ($userAllergens) {
-                            $q2->whereIn('allergens.id', $userAllergens);
-                        });
-                    });
+            ->whereHas('menu', function ($query) {
+                $query->where('is_active', true);
             })
             ->get();
 
@@ -49,6 +42,9 @@ class CatalogController extends Controller
             $menuData['daily_menu_id'] = $dm->id; 
             $menuData['service_date'] = $date->toDateString();
             $menuData['service_day'] = strtolower($date->format('l'));
+            $conflictingAllergens = $dm->menu->allergens->whereIn('id', $userAllergens)->pluck('name')->values();
+            $menuData['is_recommended'] = $conflictingAllergens->isEmpty();
+            $menuData['dietary_warnings'] = $conflictingAllergens;
             
             // Menentukan batas waktu (Cut-off Time) pemesanan:
             // Pesanan hanya bisa dilakukan maksimal H-1 pada jam 17:00 sore.
@@ -86,14 +82,34 @@ class CatalogController extends Controller
             'has_used_this_year' => $hasUsedThisYear,
             'is_claimed' => $isClaimedInSession,
             'discount_percentage' => 20, // Besaran diskon 20%
-            'min_purchase' => 50000, // Minimal pembelian Rp50.000 (tidak dipakai di sistem harga statis saat ini tapi disiapkan)
-            'user_name' => $user ? $user->name : '', // Menyapa nama user pada pop-up nanti
+            'min_purchase' => 50000,
+            'user_name' => $user ? $user->name : '',
         ];
 
-        // 5. MENGIRIM KESELURUHAN DATA KE HALAMAN KATALOG
+        $userVouchers = $user ? \App\Models\Voucher::where('user_id', $user->id)
+            ->where('is_used', false)
+            ->where('valid_until', '>=', $now)
+            ->orderBy('valid_until', 'asc')
+            ->get() : [];
+
+        // 5. Menghitung reward diskon otomatis berdasarkan segmen RFM pelanggan
+        $rfmReward = null;
+        if ($user) {
+            $rfmService = app(\App\Services\RfmService::class);
+            $rfmData = $rfmService->analyzeSingleUser($user, $now);
+            if (!empty($rfmData['voucher_preset'])) {
+                $rfmReward = array_merge($rfmData['voucher_preset'], [
+                    'segment' => $rfmData['segment'],
+                ]);
+            }
+        }
+
+        // 6. MENGIRIM KESELURUHAN DATA KE HALAMAN KATALOG
         return Inertia::render('Customer/Catalog/Index', [
-            'menus' => $menus, // Daftar menu yang lolos filter alergi dan telah diberi status orderable
+            'menus' => $menus,
             'birthdayReward' => $birthdayReward, // Data untuk menampilkan atau menyembunyikan pop-up ulang tahun
+            'userVouchers' => $userVouchers,
+            'rfmReward' => $rfmReward,
         ]);
     }
 }

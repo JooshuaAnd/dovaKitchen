@@ -1,18 +1,24 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3';
-import { UploadCloud, CheckCircle } from 'lucide-vue-next';
+import { UploadCloud, CheckCircle, Ticket } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const props = defineProps({
     order: {
         type: Object,
         required: true,
+    },
+    vouchers: {
+        type: Array,
+        default: () => [],
     }
 });
 
 const form = useForm({
     payment_proof: null,
 });
+
+const voucherForm = useForm({ voucher_code: '' });
 
 const previewUrl = ref(null);
 
@@ -28,6 +34,10 @@ const submit = () => {
     form.post(route('payment-proof.store', props.order.id), {
         preserveScroll: true,
     });
+};
+
+const applyVoucher = () => {
+    voucherForm.put(route('orders.voucher.apply', props.order.id), { preserveScroll: true });
 };
 
 const formatPrice = (price) => {
@@ -72,6 +82,26 @@ const formatPrice = (price) => {
                     <div class="flex justify-between items-end pt-2 border-t border-gray-100">
                         <span class="text-gray-700 font-bold text-base">Total Tagihan Yang Harus Ditransfer</span>
                         <span class="text-3xl font-black text-red-600">{{ formatPrice(order.total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="vouchers.length > 0 && order.discount_amount == 0 && order.payment_status === 'pending_payment'" class="rounded-2xl border border-indigo-200 bg-indigo-50 p-6 shadow-sm">
+                <div class="flex items-start gap-3">
+                    <Ticket class="mt-0.5 h-6 w-6 shrink-0 text-indigo-600" />
+                    <div class="flex-1">
+                        <h3 class="font-bold text-indigo-950">Anda memiliki voucher yang bisa digunakan</h3>
+                        <p class="mt-1 text-sm text-indigo-800">Pilih voucher untuk menghitung ulang total pembayaran.</p>
+                        <form @submit.prevent="applyVoucher" class="mt-4 flex flex-col gap-2 sm:flex-row">
+                            <select v-model="voucherForm.voucher_code" class="min-w-0 flex-1 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm font-medium text-gray-900">
+                                <option value="">Pilih voucher</option>
+                                <option v-for="voucher in vouchers" :key="voucher.id" :value="voucher.code">
+                                    {{ voucher.code }} — {{ voucher.formatted_discount }} (min. {{ formatPrice(voucher.min_purchase) }})
+                                </option>
+                            </select>
+                            <button :disabled="!voucherForm.voucher_code || voucherForm.processing" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">Gunakan</button>
+                        </form>
+                        <p v-if="voucherForm.errors.voucher_code" class="mt-2 text-xs font-medium text-red-600">{{ voucherForm.errors.voucher_code }}</p>
                     </div>
                 </div>
             </div>

@@ -29,63 +29,63 @@ const emit = defineEmits(['update:modelValue']);
 // Local reactive allergens list (allows appending newly created ones)
 const allAllergens = ref([...props.allergens]);
 
-// Category presentation configurations
+// Category presentation configurations (Monochromatic & Minimalist)
 const categoryMeta = {
     'Seafood': {
         label: 'Seafood (Makanan Laut)',
         icon: '🦐',
-        accentBg: 'bg-cyan-50',
-        accentBorder: 'border-cyan-200',
-        badgeBg: 'bg-cyan-100 text-cyan-800 border-cyan-200',
-        chipBg: 'bg-cyan-50 text-cyan-800 border-cyan-300 hover:bg-cyan-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     },
     'Meat': {
         label: 'Daging & Unggas (Meat)',
         icon: '🥩',
-        accentBg: 'bg-rose-50',
-        accentBorder: 'border-rose-200',
-        badgeBg: 'bg-rose-100 text-rose-800 border-rose-200',
-        chipBg: 'bg-rose-50 text-rose-800 border-rose-300 hover:bg-rose-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     },
     'Dairy & Telur': {
         label: 'Dairy & Telur (Susu, Olahan, Telur)',
         icon: '🥛',
-        accentBg: 'bg-amber-50',
-        accentBorder: 'border-amber-200',
-        badgeBg: 'bg-amber-100 text-amber-800 border-amber-200',
-        chipBg: 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     },
     'Kacang & Biji': {
         label: 'Kacang & Biji-bijian',
         icon: '🥜',
-        accentBg: 'bg-orange-50',
-        accentBorder: 'border-orange-200',
-        badgeBg: 'bg-orange-100 text-orange-800 border-orange-200',
-        chipBg: 'bg-orange-50 text-orange-800 border-orange-300 hover:bg-orange-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     },
     'Gluten & Gandum': {
         label: 'Gluten & Gandum (Tepung, Mi, Roti)',
         icon: '🌾',
-        accentBg: 'bg-yellow-50',
-        accentBorder: 'border-yellow-200',
-        badgeBg: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-        chipBg: 'bg-yellow-50 text-yellow-800 border-yellow-300 hover:bg-yellow-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     },
     'Seasoning': {
         label: 'Bumbu & Penyedap (Seasoning)',
         icon: '🧂',
-        accentBg: 'bg-emerald-50',
-        accentBorder: 'border-emerald-200',
-        badgeBg: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-        chipBg: 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     },
     'Lainnya': {
         label: 'Preferensi Rasa & Lainnya',
         icon: '🌶️',
-        accentBg: 'bg-purple-50',
-        accentBorder: 'border-purple-200',
-        badgeBg: 'bg-purple-100 text-purple-800 border-purple-200',
-        chipBg: 'bg-purple-50 text-purple-800 border-purple-300 hover:bg-purple-100'
+        accentBg: 'bg-gray-50',
+        accentBorder: 'border-gray-200',
+        badgeBg: 'bg-gray-100 text-gray-800 border-gray-300',
+        chipBg: 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200'
     }
 };
 
@@ -288,7 +288,7 @@ onUnmounted(() => {
                 <button 
                     type="button" 
                     @click="openAddModal()" 
-                    class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors shadow-xs"
+                    class="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors shadow-2xs"
                 >
                     <Plus class="w-3.5 h-3.5 mr-1" />
                     Tambah Bahan Baru
@@ -302,7 +302,7 @@ onUnmounted(() => {
                 v-for="(items, category) in groupedAllergens" 
                 :key="category" 
                 class="category-combobox-container relative bg-white rounded-xl border border-gray-200 hover:border-gray-300 transition-all shadow-xs"
-                :class="{'ring-2 ring-blue-500/20 border-blue-400': openCategory === category}"
+                :class="{'ring-2 ring-gray-900/10 border-gray-900': openCategory === category}"
             >
                 <!-- Category Box Trigger -->
                 <div class="p-3.5">
@@ -328,7 +328,7 @@ onUnmounted(() => {
                     <button 
                         type="button"
                         @click.stop="toggleCategory(category)"
-                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-left text-sm bg-gray-50 hover:bg-gray-100/80 border border-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-left text-sm bg-gray-50 hover:bg-gray-100/80 border border-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-1 focus:ring-gray-900"
                     >
                         <span class="truncate text-gray-700 font-medium text-xs sm:text-sm">
                             <template v-if="getSelectedInCategory(items).length === 0">
@@ -343,7 +343,7 @@ onUnmounted(() => {
                         </span>
                         <ChevronDown 
                             class="w-4 h-4 text-gray-400 ml-2 shrink-0 transition-transform duration-200"
-                            :class="{'rotate-180 text-blue-600': openCategory === category}"
+                            :class="{'rotate-180 text-gray-900': openCategory === category}"
                         />
                     </button>
 
@@ -359,7 +359,7 @@ onUnmounted(() => {
                             <button 
                                 type="button" 
                                 @click.stop="toggleAllergen(item.id)" 
-                                class="ml-1.5 opacity-60 hover:opacity-100 hover:text-red-700 focus:outline-none"
+                                class="ml-1.5 opacity-60 hover:opacity-100 hover:text-red-700 focus:outline-none cursor-pointer"
                                 title="Hapus bahan"
                             >
                                 <X class="w-3 h-3" />
@@ -379,17 +379,17 @@ onUnmounted(() => {
                 >
                     <div 
                         v-if="openCategory === category" 
-                        class="absolute left-0 right-0 top-full mt-1.5 z-40 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+                        class="absolute left-0 right-0 top-full mt-1.5 z-40 bg-white rounded-xl shadow-xl border border-gray-300 overflow-hidden"
                     >
                         <!-- Search & Quick Action Header -->
-                        <div class="p-2.5 bg-gray-50 border-b border-gray-100 space-y-2">
+                        <div class="p-2.5 bg-gray-50 border-b border-gray-200 space-y-2">
                             <div class="relative">
                                 <Search class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-gray-400" />
                                 <input 
                                     v-model="searchQueries[category]" 
                                     type="text" 
                                     :placeholder="'Cari ' + category + '...'" 
-                                    class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-gray-200 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                                    class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-gray-300 rounded-md focus:border-gray-900 focus:ring-1 focus:ring-gray-900 outline-none"
                                     @click.stop
                                 >
                             </div>
@@ -401,7 +401,7 @@ onUnmounted(() => {
                                     <button 
                                         type="button" 
                                         @click.stop="selectAllInCategory(category, items)"
-                                        class="text-blue-600 hover:text-blue-800 font-semibold"
+                                        class="text-gray-900 hover:text-black font-bold cursor-pointer"
                                     >
                                         Pilih Semua
                                     </button>
@@ -409,7 +409,7 @@ onUnmounted(() => {
                                     <button 
                                         type="button" 
                                         @click.stop="deselectAllInCategory(category, items)"
-                                        class="text-gray-500 hover:text-gray-700"
+                                        class="text-gray-500 hover:text-gray-700 cursor-pointer"
                                     >
                                         Batal Semua
                                     </button>
@@ -418,24 +418,24 @@ onUnmounted(() => {
                         </div>
 
                         <!-- Checkbox List -->
-                        <div class="max-h-56 overflow-y-auto p-1.5 divide-y divide-gray-50">
+                        <div class="max-h-56 overflow-y-auto p-1.5 divide-y divide-gray-100">
                             <label 
                                 v-for="item in getFilteredItems(category, items)" 
                                 :key="item.id"
-                                class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-50 cursor-pointer select-none transition-colors"
-                                :class="{'bg-blue-50/70 text-blue-900 font-medium': isSelected(item.id)}"
+                                class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer select-none transition-colors"
+                                :class="{'bg-gray-100 text-gray-900 font-semibold': isSelected(item.id)}"
                                 @click.stop
                             >
                                 <input 
                                     type="checkbox" 
                                     :checked="isSelected(item.id)" 
                                     @change="toggleAllergen(item.id)"
-                                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
+                                    class="w-4 h-4 text-gray-900 rounded border-gray-300 focus:ring-gray-900 cursor-pointer"
                                 >
-                                <span class="ml-2.5 text-xs sm:text-sm text-gray-700 flex-1" :class="{'text-blue-900 font-semibold': isSelected(item.id)}">
+                                <span class="ml-2.5 text-xs sm:text-sm text-gray-700 flex-1" :class="{'text-gray-950 font-bold': isSelected(item.id)}">
                                     {{ item.name }}
                                 </span>
-                                <Check v-if="isSelected(item.id)" class="w-4 h-4 text-blue-600 ml-2 shrink-0" />
+                                <Check v-if="isSelected(item.id)" class="w-4 h-4 text-gray-900 ml-2 shrink-0" />
                             </label>
 
                             <div v-if="getFilteredItems(category, items).length === 0" class="py-6 text-center text-xs text-gray-500">
@@ -444,18 +444,18 @@ onUnmounted(() => {
                         </div>
 
                         <!-- Bottom add shortcut -->
-                        <div class="p-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
+                        <div class="p-2 bg-gray-50 border-t border-gray-200 flex items-center justify-between text-xs">
                             <button 
                                 type="button" 
                                 @click.stop="openAddModal(category)"
-                                class="text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                                class="text-gray-900 hover:text-black font-bold flex items-center cursor-pointer"
                             >
                                 <Plus class="w-3 h-3 mr-1" /> Tambah bahan di {{ category }}
                             </button>
                             <button 
                                 type="button" 
                                 @click.stop="openCategory = null"
-                                class="px-2.5 py-1 bg-white hover:bg-gray-100 border border-gray-200 rounded font-medium text-gray-600"
+                                class="px-2.5 py-1 bg-white hover:bg-gray-100 border border-gray-300 rounded font-bold text-gray-700 cursor-pointer"
                             >
                                 Selesai
                             </button>
@@ -468,16 +468,16 @@ onUnmounted(() => {
 
         <!-- Add Ingredient Modal -->
         <div v-if="showAddModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/50 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
-                <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-200 animate-in fade-in zoom-in-95 duration-150">
+                <div class="flex items-center justify-between pb-3 border-b border-gray-200 mb-4">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <Plus class="w-5 h-5 mr-1.5 text-blue-600" />
+                        <Plus class="w-5 h-5 mr-1.5 text-gray-800" />
                         Tambah Bahan Baku Baru
                     </h3>
                     <button 
                         type="button" 
                         @click="showAddModal = false" 
-                        class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100"
+                        class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 cursor-pointer"
                     >
                         <X class="w-5 h-5" />
                     </button>
@@ -496,7 +496,7 @@ onUnmounted(() => {
                             v-model="newIngredientName" 
                             type="text" 
                             placeholder="Contoh: Lobster, Jamur Enoki, Keju Mozzarella..."
-                            class="w-full text-sm border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                            class="w-full text-sm border-gray-300 rounded-lg focus:border-gray-900 focus:ring-gray-900"
                             @keyup.enter="submitNewIngredient"
                         >
                     </div>
@@ -507,7 +507,7 @@ onUnmounted(() => {
                         </label>
                         <select 
                             v-model="newIngredientCategory" 
-                            class="w-full text-sm border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                            class="w-full text-sm border-gray-300 rounded-lg focus:border-gray-900 focus:ring-gray-900"
                         >
                             <option v-for="cat in orderedCategories" :key="cat" :value="cat">
                                 {{ getCategoryMeta(cat).icon }} {{ getCategoryMeta(cat).label }}
@@ -516,11 +516,11 @@ onUnmounted(() => {
                     </div>
                 </div>
 
-                <div class="mt-6 flex items-center justify-end space-x-3 pt-3 border-t border-gray-100">
+                <div class="mt-6 flex items-center justify-end space-x-3 pt-3 border-t border-gray-200">
                     <button 
                         type="button" 
                         @click="showAddModal = false" 
-                        class="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                        class="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                     >
                         Batal
                     </button>
@@ -528,7 +528,7 @@ onUnmounted(() => {
                         type="button" 
                         @click="submitNewIngredient" 
                         :disabled="isSubmittingNew || !newIngredientName.trim()"
-                        class="inline-flex items-center px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm disabled:opacity-50 transition-colors"
+                        class="inline-flex items-center px-4 py-2 text-sm font-bold text-white bg-gray-900 hover:bg-black rounded-lg shadow-sm disabled:opacity-50 transition-colors cursor-pointer"
                     >
                         <span v-if="isSubmittingNew">Menyimpan...</span>
                         <span v-else>Simpan & Gunakan</span>

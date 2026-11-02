@@ -3,7 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import MenuIngredientsSelector from '@/Components/Admin/MenuIngredientsSelector.vue';
-import { ArrowLeft, Utensils, Image as ImageIcon, CheckCircle } from 'lucide-vue-next';
+import { ArrowLeft, Image as ImageIcon, CheckCircle } from 'lucide-vue-next';
 
 const props = defineProps({
     menu: Object,
@@ -44,151 +44,152 @@ const submit = () => {
     <Head :title="'Edit Menu - ' + menu.name" />
 
     <AdminLayout>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Header Navigation -->
-            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <Link 
-                        :href="route('admin.menus.index')" 
-                        class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors mb-2"
-                    >
-                        <ArrowLeft class="w-4 h-4 mr-1.5" /> Kembali ke Daftar Menu
-                    </Link>
-                    <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                        Edit Menu: {{ menu.name }}
-                    </h1>
-                    <p class="text-sm text-gray-500 mt-1">
-                        Perbarui detail menu dan bahan baku spesifik untuk pencocokan akurat dengan profil diet kustomer.
-                    </p>
-                </div>
+            <div class="mb-8 pb-4 border-b border-gray-200">
+                <Link 
+                    :href="route('admin.menus.index')" 
+                    class="inline-flex items-center text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors mb-2.5"
+                >
+                    <ArrowLeft class="w-4 h-4 mr-1.5" /> Kembali ke Daftar Menu
+                </Link>
+                <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+                    Edit Menu: {{ menu.name }}
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">
+                    Perbarui informasi hidangan dan bahan baku untuk menu katering Dova Kitchen.
+                </p>
             </div>
 
+            <!-- Frameless Form Flow -->
             <form @submit.prevent="submit" class="space-y-8">
-                <!-- Section 1: Informasi Dasar Menu -->
-                <div class="bg-white rounded-2xl shadow-xs border border-gray-200 p-6 sm:p-8">
-                    <div class="flex items-center space-x-3 pb-4 mb-6 border-b border-gray-100">
-                        <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
-                            <Utensils class="w-5 h-5" />
-                        </div>
+                <!-- Section 1: Informasi Utama Menu -->
+                <div class="space-y-5">
+                    <div class="pb-2 border-b border-gray-200">
+                        <h2 class="text-base font-bold text-gray-900">Informasi Menu</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">Nama menu, harga satuan, status ketersediaan, dan deskripsi sajian</p>
+                    </div>
+
+                    <!-- Nama Menu -->
+                    <div>
+                        <label for="name" class="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                            Nama Menu <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            id="name"
+                            v-model="form.name" 
+                            type="text" 
+                            required 
+                            placeholder="Contoh: Salmon Teriyaki Bowl" 
+                            class="block w-full border border-gray-300 bg-white text-gray-900 rounded-xl shadow-xs px-4 py-3 text-sm font-medium transition-colors focus:border-[#0D542B] focus:ring-1 focus:ring-[#0D542B] outline-none"
+                        >
+                        <div v-if="form.errors.name" class="text-red-500 text-xs mt-1.5 font-medium">{{ form.errors.name }}</div>
+                    </div>
+
+                    <!-- Grid 2 Kolom: Harga & Status -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <!-- Harga -->
                         <div>
-                            <h2 class="text-base font-bold text-gray-900">Informasi Utama Menu</h2>
-                            <p class="text-xs text-gray-500">Nama, harga, deskripsi porsi, dan foto tampilan menu</p>
+                            <label for="price" class="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                Harga Satuan (Rp) <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 text-sm font-semibold">
+                                    Rp
+                                </span>
+                                <input 
+                                    id="price"
+                                    v-model="form.price" 
+                                    type="number" 
+                                    required 
+                                    placeholder="35000" 
+                                    min="0"
+                                    class="pl-10 block w-full border border-gray-300 bg-white text-gray-900 rounded-xl shadow-xs px-4 py-3 text-sm font-medium transition-colors focus:border-[#0D542B] focus:ring-1 focus:ring-[#0D542B] outline-none"
+                                >
+                            </div>
+                            <div v-if="form.errors.price" class="text-red-500 text-xs mt-1.5 font-medium">{{ form.errors.price }}</div>
+                        </div>
+
+                        <!-- Status Publikasi -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                Status Publikasi
+                            </label>
+                            <label class="flex items-center h-[46px] px-4 border border-gray-300 rounded-xl bg-white cursor-pointer hover:bg-gray-50 transition-colors shadow-xs">
+                                <input 
+                                    id="is_active" 
+                                    v-model="form.is_active" 
+                                    type="checkbox" 
+                                    class="h-4 w-4 rounded border-gray-300 text-[#0D542B] focus:ring-[#0D542B]"
+                                >
+                                <span class="ml-3 text-sm font-semibold text-gray-800">Menu Aktif (Tampil di katalog)</span>
+                            </label>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Left Sub-column -->
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                                    Nama Menu <span class="text-red-500">*</span>
-                                </label>
-                                <input 
-                                    v-model="form.name" 
-                                    type="text" 
-                                    required 
-                                    placeholder="Contoh: Salmon Teriyaki Bowl" 
-                                    class="w-full text-sm rounded-xl border-gray-300 shadow-xs focus:border-blue-500 focus:ring-blue-500"
-                                >
-                                <div v-if="form.errors.name" class="text-red-500 text-xs mt-1 font-medium">{{ form.errors.name }}</div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                                    Harga (Rp) <span class="text-red-500">*</span>
-                                </label>
-                                <div class="relative rounded-xl shadow-xs">
-                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 text-sm font-semibold">
-                                        Rp
-                                    </div>
-                                    <input 
-                                        v-model="form.price" 
-                                        type="number" 
-                                        required 
-                                        placeholder="35000" 
-                                        min="0"
-                                        class="w-full pl-11 text-sm rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                                    >
-                                </div>
-                                <div v-if="form.errors.price" class="text-red-500 text-xs mt-1 font-medium">{{ form.errors.price }}</div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                                    Status Publikasi
-                                </label>
-                                <label class="flex items-center p-3 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
-                                    <input 
-                                        id="is_active" 
-                                        v-model="form.is_active" 
-                                        type="checkbox" 
-                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                    >
-                                    <div class="ml-3">
-                                        <span class="text-sm font-bold text-gray-800">Aktif</span>
-                                        <p class="text-xs text-gray-500">Tampilkan menu ini di katalog pre-order kustomer</p>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Right Sub-column -->
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                                    Foto Menu (Opsional)
-                                </label>
-                                <div class="flex items-center space-x-4">
-                                    <div class="h-24 w-24 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 shrink-0">
-                                        <img v-if="photoPreview" :src="photoPreview" class="h-full w-full object-cover" alt="Preview Baru">
-                                        <img v-else-if="menu.photo_path" :src="menu.photo_path" class="h-full w-full object-cover" alt="Foto Saat Ini">
-                                        <ImageIcon v-else class="w-8 h-8 text-gray-400" />
-                                    </div>
-                                    <div class="flex-1">
-                                        <input 
-                                            @change="handlePhotoChange" 
-                                            type="file" 
-                                            accept="image/*" 
-                                            class="block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-                                        >
-                                        <p class="text-xs text-gray-400 mt-1">Pilih gambar baru untuk mengganti foto lama.</p>
-                                    </div>
-                                </div>
-                                <div v-if="form.errors.photo" class="text-red-500 text-xs mt-1 font-medium">{{ form.errors.photo }}</div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                                    Deskripsi Menu
-                                </label>
-                                <textarea 
-                                    v-model="form.description" 
-                                    rows="3" 
-                                    placeholder="Deskripsi singkat rasa, kelezatan, dan penyajian menu..."
-                                    class="w-full text-sm rounded-xl border-gray-300 shadow-xs focus:border-blue-500 focus:ring-blue-500"
-                                ></textarea>
-                                <div v-if="form.errors.description" class="text-red-500 text-xs mt-1 font-medium">{{ form.errors.description }}</div>
-                            </div>
-                        </div>
+                    <!-- Deskripsi Menu -->
+                    <div>
+                        <label for="description" class="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                            Deskripsi Menu
+                        </label>
+                        <textarea 
+                            id="description"
+                            v-model="form.description" 
+                            rows="3" 
+                            placeholder="Deskripsi singkat rasa, porsi, atau penyajian menu..."
+                            class="block w-full border border-gray-300 bg-white text-gray-900 rounded-xl shadow-xs px-4 py-3 text-sm font-medium transition-colors focus:border-[#0D542B] focus:ring-1 focus:ring-[#0D542B] outline-none"
+                        ></textarea>
+                        <div v-if="form.errors.description" class="text-red-500 text-xs mt-1.5 font-medium">{{ form.errors.description }}</div>
                     </div>
                 </div>
 
-                <!-- Section 2: Bahan Baku & Smart Dietary Selector -->
-                <div class="bg-white rounded-2xl shadow-xs border border-gray-200 p-6 sm:p-8">
+                <!-- Section 2: Foto Menu -->
+                <div class="space-y-4 pt-6 border-t border-gray-200">
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900">Foto Menu</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">Unggah gambar baru untuk mengganti foto hidangan saat ini (opsional)</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-xs">
+                        <div class="h-24 w-24 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 shrink-0">
+                            <img v-if="photoPreview" :src="photoPreview" class="h-full w-full object-cover" alt="Preview Baru">
+                            <img v-else-if="menu.photo_path" :src="menu.photo_path" class="h-full w-full object-cover" alt="Foto Saat Ini">
+                            <ImageIcon v-else class="w-8 h-8 text-gray-400" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <input 
+                                @change="handlePhotoChange" 
+                                type="file" 
+                                accept="image/*" 
+                                class="block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border file:border-gray-300 file:text-xs file:font-bold file:bg-gray-100 file:text-gray-800 hover:file:bg-gray-200 cursor-pointer"
+                            >
+                            <p class="text-xs text-gray-400 mt-1.5">Pilih file baru jika ingin mengganti gambar lama (PNG, JPG, WEBP maks. 2MB).</p>
+                        </div>
+                    </div>
+                    <div v-if="form.errors.photo" class="text-red-500 text-xs font-medium">{{ form.errors.photo }}</div>
+                </div>
+
+                <!-- Section 3: Bahan Baku & Alergen -->
+                <div class="space-y-4 pt-6 border-t border-gray-200">
+                    <div>
+                        <h2 class="text-base font-bold text-gray-900">Bahan Baku & Pantangan Diet</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">Tandai bahan baku yang terkandung dalam menu ini agar tersaring otomatis sesuai profil diet pelanggan</p>
+                    </div>
+
                     <MenuIngredientsSelector 
                         v-model="form.allergen_ids" 
                         :allergens="allergens" 
                     />
-                    <div v-if="form.errors.allergen_ids" class="text-red-500 text-xs mt-2 font-medium">
+                    <div v-if="form.errors.allergen_ids" class="text-red-500 text-xs font-medium">
                         {{ form.errors.allergen_ids }}
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex items-center justify-between pt-4 pb-12">
+                <!-- Section 4: Tombol Aksi di Bawah -->
+                <div class="pt-8 border-t border-gray-200 flex items-center justify-between gap-4 pb-16">
                     <Link 
                         :href="route('admin.menus.index')" 
-                        class="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"
+                        class="px-5 py-2.5 rounded-xl border border-gray-300 bg-white text-sm font-bold text-gray-700 hover:bg-gray-100 shadow-xs transition-colors"
                     >
                         Batal
                     </Link>
@@ -196,10 +197,10 @@ const submit = () => {
                     <button 
                         type="submit" 
                         :disabled="form.processing" 
-                        class="inline-flex items-center justify-center rounded-xl border border-transparent bg-blue-600 py-3 px-8 text-sm font-bold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+                        class="inline-flex items-center justify-center rounded-xl bg-[#0D542B] hover:bg-[#0a4222] px-6 py-2.5 text-sm font-bold text-white shadow-xs focus:outline-none focus:ring-2 focus:ring-[#0D542B] focus:ring-offset-2 disabled:opacity-50 transition-colors cursor-pointer"
                     >
                         <CheckCircle class="w-4 h-4 mr-2" />
-                        {{ form.processing ? 'Menyimpan Perubahan...' : 'Simpan Perubahan' }}
+                        {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
                     </button>
                 </div>
             </form>
