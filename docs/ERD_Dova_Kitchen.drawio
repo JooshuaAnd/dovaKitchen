@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" modified="2026-11-05T00:00:00.000Z" agent="Codex" version="24.0.0" type="device">
+  <diagram name="ERD Dova Kitchen" id="erd-dova-kitchen">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2500" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ERD DOVA KITCHEN" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="500" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend" value="Keterangan: [PK] Primary Key | [FK] Foreign Key | [UK] Unique Key | [nullable] boleh NULL&#xa;Kardinalitas ditulis pada garis relasi. VOUCHER_TEMPLATES tidak memiliki FK langsung ke VOUCHERS." style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=8;fontSize=12;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1180" width="760" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="USERS" value="USERS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;name : VARCHAR&#xa;phone : VARCHAR [UK, nullable]&#xa;email : VARCHAR [UK, nullable]&#xa;date_of_birth : DATE [nullable]&#xa;birthday_reward_claimed_year : INTEGER [nullable]&#xa;email_verified_at : TIMESTAMP [nullable]&#xa;password : VARCHAR [nullable]&#xa;remember_token : VARCHAR(100) [nullable]&#xa;is_admin : BOOLEAN [default false]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="360" height="390" as="geometry"/>
+        </mxCell>
+        <mxCell id="ALLERGENS" value="ALLERGENS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;name : VARCHAR&#xa;category : VARCHAR [default Lainnya]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="470" y="80" width="300" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="MENUS" value="MENUS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;name : VARCHAR&#xa;description : TEXT [nullable]&#xa;price : DECIMAL(10,2)&#xa;photo_path : VARCHAR [nullable]&#xa;is_active : BOOLEAN [default true]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="860" y="80" width="340" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="VOUCHER_TEMPLATES" value="VOUCHER_TEMPLATES&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;title : VARCHAR&#xa;code_prefix : VARCHAR(30)&#xa;rfm_segment : VARCHAR&#xa;discount_type : ENUM(percentage, fixed)&#xa;discount_value : DECIMAL(12,2)&#xa;min_purchase : DECIMAL(12,2) [default 0]&#xa;valid_until : DATETIME&#xa;notes : TEXT [nullable]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="80" width="370" height="280" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="USER_ALLERGENS" value="USER_ALLERGENS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;user_id : BIGINT UNSIGNED [FK]&#xa;allergen_id : BIGINT UNSIGNED [FK]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="610" width="360" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="MENU_ALLERGENS" value="MENU_ALLERGENS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;menu_id : BIGINT UNSIGNED [FK]&#xa;allergen_id : BIGINT UNSIGNED [FK]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="470" y="610" width="360" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="DAILY_MENUS" value="DAILY_MENUS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;menu_id : BIGINT UNSIGNED [FK]&#xa;service_date : DATE&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP&#xa;UNIQUE(menu_id, service_date)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="860" y="450" width="340" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="ORDERS" value="ORDERS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;user_id : BIGINT UNSIGNED [FK]&#xa;order_code : VARCHAR [UK]&#xa;subtotal_amount : DECIMAL(12,2) [nullable]&#xa;discount_amount : DECIMAL(12,2) [default 0]&#xa;discount_type : VARCHAR [nullable]&#xa;total_amount : DECIMAL(12,2)&#xa;payment_status : ENUM(pending_payment, awaiting_verification, paid, rejected)&#xa;payment_proof_path : VARCHAR [nullable]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="470" width="390" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="VOUCHERS" value="VOUCHERS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;user_id : BIGINT UNSIGNED [FK]&#xa;code : VARCHAR [UK]&#xa;discount_type : ENUM(percentage, fixed)&#xa;discount_value : DECIMAL(12,2)&#xa;min_purchase : DECIMAL(12,2) [default 0]&#xa;valid_until : DATETIME&#xa;rfm_segment : VARCHAR [nullable]&#xa;title : VARCHAR [nullable]&#xa;notes : TEXT [nullable]&#xa;is_used : BOOLEAN [default false]&#xa;used_at : DATETIME [nullable]&#xa;used_in_order_id : BIGINT UNSIGNED [FK, nullable]&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1770" y="470" width="390" height="380" as="geometry"/>
+        </mxCell>
+        <mxCell id="ORDER_ITEMS" value="ORDER_ITEMS&#xa;--------------------&#xa;id : BIGINT UNSIGNED [PK]&#xa;order_id : BIGINT UNSIGNED [FK]&#xa;menu_id : BIGINT UNSIGNED [FK]&#xa;service_date : DATE [nullable]&#xa;portion_quantity : INTEGER&#xa;unit_price : DECIMAL(10,2)&#xa;subtotal : DECIMAL(12,2)&#xa;created_at : TIMESTAMP&#xa;updated_at : TIMESTAMP" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fontSize=11;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="860" y="820" width="360" height="250" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rel-users-orders" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="USERS" target="ORDERS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="520" y="500"/><mxPoint x="1180" y="500"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-users-vouchers" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="USERS" target="VOUCHERS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="420" y="530"/><mxPoint x="1720" y="530"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-users-user-allergens" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="USERS" target="USER_ALLERGENS">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-allergens-user-allergens" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ALLERGENS" target="USER_ALLERGENS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="420" y="340"/><mxPoint x="420" y="700"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-menus-daily-menus" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="MENUS" target="DAILY_MENUS">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-menus-menu-allergens" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="MENUS" target="MENU_ALLERGENS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="820" y="600"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-allergens-menu-allergens" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ALLERGENS" target="MENU_ALLERGENS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="450" y="350"/><mxPoint x="450" y="700"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-menus-order-items" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="MENUS" target="ORDER_ITEMS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="820" y="900"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-orders-order-items" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ORDERS" target="ORDER_ITEMS">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1250" y="900"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="rel-orders-vouchers" value="0..1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;endArrow=none;startArrow=none;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ORDERS" target="VOUCHERS">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
